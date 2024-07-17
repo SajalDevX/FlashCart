@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.compose.compiler)
+    id("com.google.devtools.ksp") version "1.9.23-1.0.20"
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -40,7 +42,16 @@ dependencies {
     implementation(projects.shared)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
+    implementation(libs.androidx.material)
     implementation(libs.androidx.activity.compose)
     debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.koin.androidx.compose)
+
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.accompanist.systemuicontroller)
+
+    implementation(libs.coil.compose)
 }
