@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="username_hint">Name</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="signup_button_hint">Sign up</string>
+    <string name="loading_error_message">Unknown Error occurred</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="age_hint">Enter Age</string>
+    <string name="mobile_number_hint">Mobile number</string>
+    <string name="email_heading">Get going with email</string>
+    <string name="email_subheading">It’s helpful to provide a good reason for why the email address is required.</string>
+    <string name="continue_text">Continue</string>
+    <string name="create_password">Create password</string>
+    <string name="nothing" />
+    <string name="user_details_heading">Basic details</string>
+    <string name="user_detail_subheading">Add basic details so we can know you better</string>
+    <string name="mobile_heading">Your phone number</string>
+    <string name="mobile_subheading">It’s helpful to provide a good reason for why the phone number is required.</string>
+</resources>

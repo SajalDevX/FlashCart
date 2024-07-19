@@ -17,6 +17,9 @@ ktorClientLoggingJvm = "2.3.11"
 ktorVersion = "2.2.1"
 lifecycleRuntimeCompose = "2.8.3"
 material = "1.6.8"
+material3Android = "1.2.1"
+navigationRuntimeKtx = "2.7.7"
+navigationCompose = "2.7.7"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -44,6 +47,9 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
 ktor-client-logging-jvm = { module = "io.ktor:ktor-client-logging-jvm", version.ref = "ktorClientLoggingJvm" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

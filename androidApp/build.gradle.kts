@@ -44,6 +44,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.androidx.material)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
 
