@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
 
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.jetpack.compose.country.code.picker.emoji)
 
     implementation(libs.coil.compose)
 }

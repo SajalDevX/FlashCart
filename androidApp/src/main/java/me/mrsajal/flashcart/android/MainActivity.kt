@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import me.mrsajal.flashcart.android.auth.signup.SignUpNavHost
 import me.mrsajal.flashcart.android.common.theming.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +20,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
+                    val navController = rememberNavController()
+                    SignUpNavHost(navController = navController)
                 }
             }
         }

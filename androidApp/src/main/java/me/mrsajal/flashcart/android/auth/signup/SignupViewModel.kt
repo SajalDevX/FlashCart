@@ -15,6 +15,13 @@ class SignupViewModel(
     var uiState by mutableStateOf(SignUpUiState())
         private set
 
+    private val roleMapping = mapOf(
+        "Customer" to "customer",
+        "Admin" to "admin",
+        "Seller" to "seller",
+        "Super admin" to "super_admin"
+    )
+
     fun signUp() {
         viewModelScope.launch {
             val validationResult = validateInput()
@@ -26,15 +33,18 @@ class SignupViewModel(
                 return@launch
             }
 
-            uiState = uiState.copy(isAuthenticating = true)
+            uiState = uiState.copy(
+                isAuthenticating = true,
+            )
+
             val authResultData = signUpUseCase(
                 email = uiState.email,
                 name = uiState.username,
                 password = uiState.password,
-                age = uiState.age,
-                mobile = uiState.mobile,
+                age = uiState.age.toString(),
+                mobile = "${uiState.countryCode}${uiState.phoneNumber}",
                 gender = uiState.gender,
-                userRole = uiState.userRole
+                userRole = roleMapping[uiState.userRole]?:"customer"
             )
             uiState = when (authResultData) {
                 is Result.Success -> {
@@ -55,25 +65,84 @@ class SignupViewModel(
     }
 
     private fun validateInput(): String? {
-        val age = uiState.age?.toIntOrNull()
+        return when {
+            validateUsername() != null -> validateUsername()
+            validateEmail() != null -> validateEmail()
+            validatePassword() != null -> validatePassword()
+            validateAge() != null -> validateAge()
+            validatePhoneNumber() != null -> validatePhoneNumber()
+            else -> null
+        }
+    }
+
+    fun validateUsername(): String? {
+        if (uiState.username.isBlank()) {
+            return "Username cannot be empty."
+        }
+        return null
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+        return email.matches(emailRegex)
+    }
+
+    fun validateEmail(): String? {
+        if (uiState.email.isBlank()) {
+            return "Email cannot be empty."
+        }
+        if (!isValidEmail(uiState.email)) {
+            return "Enter a valid email address."
+        }
+        return null
+    }
+
+    fun validatePassword(): String? {
+        if (uiState.password.isBlank()) {
+            return "Password cannot be empty."
+        }
+        if (uiState.confirmPassword.isBlank()) {
+            return "Confirm password cannot be empty."
+        }
+        if (uiState.password != uiState.confirmPassword) {
+            return "Passwords must match."
+        }
+        return null
+    }
+
+    fun validateAge(): String? {
+        val age = uiState.age?.toInt()
         if (age == null || age < 12 || age > 100) {
             return "Age must be between 12 and 100 years."
         }
-
-        if (uiState.mobile.length != 10 || !uiState.mobile.all { it.isDigit() }) {
-            return "Mobile number must be exactly 10 digits."
-        }
-
-        if (uiState.password != uiState.confirmPassword) {
-            return "Password and confirm password must match."
-        }
-
         return null
+    }
+
+    // New validation function for phone number and country code
+    fun validatePhoneNumber(): String? {
+        val fullPhoneNumber = "${uiState.countryCode}${uiState.phoneNumber}"
+        if (uiState.countryCode.isBlank()) {
+            return "Country code cannot be empty."
+        }
+        if (uiState.phoneNumber.isBlank()) {
+            return "Phone number cannot be empty."
+        }
+        if (!isValidPhoneNumber(fullPhoneNumber)) {
+            return "Enter a valid phone number with country code."
+        }
+        return null
+    }
+
+    private fun isValidPhoneNumber(phoneNumber: String): Boolean {
+        // A simple regex for phone numbers that includes country code
+        val phoneRegex = "^\\+[1-9][0-9]{7,14}$".toRegex()
+        return phoneNumber.matches(phoneRegex)
     }
 
     fun updateUsername(input: String) {
         uiState = uiState.copy(username = input)
     }
+
     fun updateEmail(input: String) {
         uiState = uiState.copy(email = input)
     }
@@ -90,8 +159,8 @@ class SignupViewModel(
         uiState = uiState.copy(age = input)
     }
 
-    fun updateMobile(input: String) {
-        uiState = uiState.copy(mobile = input)
+    fun updatePhoneNumber(countryCode: String, phoneNumber: String) {
+        uiState = uiState.copy(countryCode = countryCode, phoneNumber = phoneNumber)
     }
 
     fun updateGender(input: String) {
@@ -101,6 +170,61 @@ class SignupViewModel(
     fun updateRole(input: String) {
         uiState = uiState.copy(userRole = input)
     }
+
+    fun onUsernameContinue(): Boolean {
+        val validationResult = validateUsername()
+        return if (validationResult != null) {
+            uiState = uiState.copy(errMessage = validationResult)
+            false
+        } else {
+            uiState = uiState.copy(errMessage = null)
+            true
+        }
+    }
+
+    fun onEmailContinue(): Boolean {
+        val validationResult = validateEmail()
+        return if (validationResult != null) {
+            uiState = uiState.copy(errMessage = validationResult)
+            false
+        } else {
+            uiState = uiState.copy(errMessage = null)
+            true
+        }
+    }
+
+    fun onPasswordContinue(): Boolean {
+        val validationResult = validatePassword()
+        return if (validationResult != null) {
+            uiState = uiState.copy(errMessage = validationResult)
+            false
+        } else {
+            uiState = uiState.copy(errMessage = null)
+            true
+        }
+    }
+
+    fun onAgeContinue(): Boolean {
+        val validationResult = validateAge()
+        return if (validationResult != null) {
+            uiState = uiState.copy(errMessage = validationResult)
+            false
+        } else {
+            uiState = uiState.copy(errMessage = null)
+            true
+        }
+    }
+
+    fun onPhoneNumberContinue(): Boolean {
+        val validationResult = validatePhoneNumber()
+        return if (validationResult != null) {
+            uiState = uiState.copy(errMessage = validationResult)
+            false
+        } else {
+            uiState = uiState.copy(errMessage = null)
+            true
+        }
+    }
 }
 
 data class SignUpUiState(
@@ -109,9 +233,10 @@ data class SignUpUiState(
     val password: String = "",
     val confirmPassword: String = "",
     val gender: String = "",
-    val mobile: String = "",
+    val countryCode: String = "",
+    val phoneNumber: String = "",
     val userRole: String = "",
-    val age: String? = null,
+    val age: String? = "",
     val isAuthenticating: Boolean = false,
     val errMessage: String? = null,
     val authSuccess: Boolean = false,

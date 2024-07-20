@@ -5,8 +5,10 @@ coilCompose = "2.4.0"
 coreSplashscreen = "1.0.1"
 coroutinesVersion = "1.6.4"
 datastoreVersion = "1.1.1"
+jetpack_compose_country_code_picker_emoji = "2.2.7"
 koinAndroidxCompose = "3.5.0"
 koinVersion = "3.3.2"
+komposecountrycodepicker = "<latest-version>"
 kotlin = "2.0.0"
 compose = "1.5.4"
 compose-material3 = "1.1.2"
@@ -29,9 +31,11 @@ androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-p
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+jetpack_compose_country_code_picker_emoji = { module = "com.github.jump-sdk:jetpack_compose_country_code_picker_emoji", version.ref = "jetpack_compose_country_code_picker_emoji" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinVersion" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinVersion" }
+komposecountrycodepicker = { module = "io.github.joelkanyi:komposecountrycodepicker", version.ref = "komposecountrycodepicker" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }

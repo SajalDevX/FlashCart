@@ -12,6 +12,7 @@ import me.mrsajal.flashcart.android.auth.signup.screens.PasswordScreen
 import me.mrsajal.flashcart.android.auth.signup.screens.UserDetailScreen
 import me.mrsajal.flashcart.android.common.util.routes.AuthStreamRoute
 import me.mrsajal.flashcart.android.common.util.routes.MainStreamRoute
+import me.mrsajal.flashcart.android.presentation.home.HomeScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -28,11 +29,14 @@ fun SignUpNavHost(
     ) {
         composable(AuthStreamRoute.Email.route) {
             EmailScreen(
+                navController = authNavController,
                 uiState = uiState,
-                onButtonClick = {
-                    authNavController.navigate(AuthStreamRoute.Mobile.route) {
-                        popUpTo(MainStreamRoute.Onboarding.route) {
-                            inclusive = true
+                onNavigateToMobileScreen = {
+                    if (viewModel.onEmailContinue()) {
+                        authNavController.navigate(AuthStreamRoute.Mobile.route) {
+                            popUpTo(AuthStreamRoute.Email.route) {
+                                inclusive = true
+                            }
                         }
                     }
                 },
@@ -42,25 +46,31 @@ fun SignUpNavHost(
         }
         composable(AuthStreamRoute.Mobile.route) {
             MobileScreen(
+                navController = authNavController,
                 uiState = uiState,
-                onButtonClick = {
-                    authNavController.navigate(AuthStreamRoute.Details.route) {
-                        popUpTo(AuthStreamRoute.Email.route) {
-                            inclusive = true
+                onNavigateToDetailsScreen = {
+                    if (viewModel.onPhoneNumberContinue()) {
+                        authNavController.navigate(AuthStreamRoute.Details.route) {
+                            popUpTo(AuthStreamRoute.Email.route) {
+                                inclusive = true
+                            }
                         }
                     }
                 },
-                onMobileChange = { mobile -> viewModel.updateMobile(mobile) },
+                onMobileChange = { code, mobile -> viewModel.updatePhoneNumber(code, mobile) },
                 buttonText = R.string.continue_text
             )
         }
         composable(AuthStreamRoute.Details.route) {
             UserDetailScreen(
+                navController = authNavController,
                 uiState = uiState,
-                onButtonClick = {
-                    authNavController.navigate(AuthStreamRoute.Password.route) {
-                        popUpTo(AuthStreamRoute.Mobile.route) {
-                            inclusive = true
+                onNavigateToPasswordScreen = {
+                    if (viewModel.onUsernameContinue() && viewModel.onAgeContinue()) {
+                        authNavController.navigate(AuthStreamRoute.Password.route) {
+                            popUpTo(AuthStreamRoute.Mobile.route) {
+                                inclusive = true
+                            }
                         }
                     }
                 },
@@ -73,19 +83,28 @@ fun SignUpNavHost(
         }
         composable(AuthStreamRoute.Password.route) {
             PasswordScreen(
+                navController = navController,
+                authNavController = authNavController,
                 uiState = uiState,
-                onButtonClick = {
-                    navController.navigate(MainStreamRoute.Home.route) {
-                        popUpTo(AuthStreamRoute.Mobile.route) {
-                            inclusive = true
-                        }
+                onNavigateToHome = {
+                    if (viewModel.onPasswordContinue()) {
+                        viewModel.signUp()
+//                        navController.navigate(MainStreamRoute.Home.route) {
+//                            popUpTo(AuthStreamRoute.Mobile.route) {
+//                                inclusive = true
+//                            }
+//                        }
                     }
                 },
                 onPasswordChange = { password -> viewModel.updatePassword(password) },
-                onConfirmPasswordChange = { confirmPassword -> viewModel.updateConfirmPassword(confirmPassword) },
+                onConfirmPasswordChange = { confirmPassword ->
+                    viewModel.updateConfirmPassword(confirmPassword)
+                },
                 buttonText = R.string.signup_button_hint
             )
         }
+        composable(MainStreamRoute.Home.route){
+            HomeScreen()
+        }
     }
-
 }
