@@ -3,20 +3,8 @@ package me.mrsajal.flashcart.android.auth.signup.screens
 import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -34,21 +22,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.togitech.ccp.component.TogiCountryCodePicker
-import me.mrsajal.flashcart.android.R
-import me.mrsajal.flashcart.android.auth.common.CustomButton
 import me.mrsajal.flashcart.android.auth.signup.SignUpUiState
 import me.mrsajal.flashcart.android.common.theming.AppTheme
-import me.mrsajal.flashcart.android.common.util.routes.AuthStreamRoute
+import me.mrsajal.flashcart.android.R
+import me.mrsajal.flashcart.android.auth.common.CustomButton
+import me.mrsajal.flashcart.android.common.util.components.CustomTextField
+import me.mrsajal.flashcart.android.common.util.routes.Routes
 
 @Composable
-fun MobileScreen(
+fun EmailScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     uiState: SignUpUiState,
-    onNavigateToDetailsScreen: () -> Unit,
+    onNavigateToMobileScreen: () -> Unit,
     @StringRes buttonText: Int,
-    onMobileChange: (String,String) -> Unit,
+    onEmailChange: (String) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -56,7 +44,7 @@ fun MobileScreen(
                 modifier = modifier.fillMaxWidth(),
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(AuthStreamRoute.Email.route) }) {
+                    IconButton(onClick = { navController.navigate(Routes.Onboarding.route) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             modifier = modifier.size(24.dp),
@@ -69,6 +57,7 @@ fun MobileScreen(
             )
         },
     ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -83,7 +72,7 @@ fun MobileScreen(
                     .height(200.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.mobile),
+                    painter = painterResource(id = R.drawable.email),
                     contentDescription = null,
                     modifier = Modifier
                         .height(30.dp),
@@ -93,7 +82,7 @@ fun MobileScreen(
                 )
                 Spacer(modifier = modifier.height(10.dp))
                 Text(
-                    text = stringResource(id = R.string.mobile_heading),
+                    text = stringResource(id = R.string.email_heading),
                     modifier = modifier
                         .width(192.dp),
                     fontWeight = FontWeight(700),
@@ -102,7 +91,7 @@ fun MobileScreen(
                 )
                 Spacer(modifier = modifier.height(10.dp))
                 Text(
-                    text = stringResource(R.string.mobile_subheading),
+                    text = stringResource(R.string.email_subheading),
                     modifier = modifier
                         .height(40.dp)
                         .width(328.dp),
@@ -111,40 +100,44 @@ fun MobileScreen(
                     fontWeight = FontWeight(400)
                 )
                 Spacer(modifier = modifier.height(24.dp))
-                TogiCountryCodePicker(
-                    shape = RoundedCornerShape(12.dp),
-                    onValueChange = { (code, phone), isValid ->
-                        if (isValid) {
-                            onMobileChange(code, phone)
-                        }
-                    },
-                    modifier = modifier.fillMaxWidth()
+                CustomTextField(
+                    value = uiState.email,
+                    onValueChange = onEmailChange,
+                    hint = R.string.email_hint,
+                    isSingleLine = true,
+                    isValid = if(uiState.errorMessage==null) true else false,
                 )
+                if (uiState.errorMessage != null) {
+                    Spacer(modifier = modifier.height(8.dp))
+                    Text(
+                        text = uiState.errorMessage,
+                        color = MaterialTheme.colors.error,
+                        style = MaterialTheme.typography.caption
+                    )
+                }
             }
             CustomButton(
                 text = stringResource(buttonText),
-                onClick = onNavigateToDetailsScreen
+                onClick = onNavigateToMobileScreen
             )
-            println("The user mobile number is ${uiState.phoneNumber} and email is ${uiState.email}")
+            println("The user email is ${uiState.email}")
 
         }
     }
 }
 
-
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun MobileScreenPreview() {
+fun EmailScreenPreview() {
     AppTheme {
         val navController = rememberNavController()
         val uiState = remember { SignUpUiState(email = "") }
-        MobileScreen(
+        EmailScreen(
             navController = navController,
             uiState = uiState,
-            onNavigateToDetailsScreen = { /*TODO*/ },
+            onNavigateToMobileScreen = { /*TODO*/ },
             buttonText = android.R.string.ok,
-            onMobileChange = { _, _ -> }
+            onEmailChange = {}
         )
     }
 }
-

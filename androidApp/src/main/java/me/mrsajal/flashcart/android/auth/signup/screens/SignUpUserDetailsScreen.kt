@@ -33,7 +33,7 @@ import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.auth.common.CustomButton
 import me.mrsajal.flashcart.android.auth.signup.SignUpUiState
 import me.mrsajal.flashcart.android.common.util.components.CustomTextField
-import me.mrsajal.flashcart.android.common.util.routes.AuthStreamRoute
+import me.mrsajal.flashcart.android.common.util.routes.Routes
 
 @Composable
 fun UserDetailScreen(
@@ -59,7 +59,7 @@ fun UserDetailScreen(
                 modifier = modifier.fillMaxWidth(),
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(AuthStreamRoute.Mobile.route) }) {
+                    IconButton(onClick = { navController.navigate(Routes.SignUpMobile.route) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             modifier = modifier.size(24.dp),
@@ -126,7 +126,7 @@ fun UserDetailScreen(
                     hint = R.string.age_hint,
                     isSingleLine = true,
                     keyboardType = KeyboardType.Number,
-                    isValid = uiState.errMessage?.contains("age", ignoreCase = true) == null,
+                    isValid = uiState.errorMessage?.contains("age", ignoreCase = true) == null,
                 )
                 Spacer(modifier = modifier.height(10.dp))
 
@@ -190,10 +190,10 @@ fun UserDetailScreen(
                         }
                     }
                 }
-                if (uiState.errMessage != null) {
+                if (uiState.errorMessage != null) {
                     Spacer(modifier = modifier.height(8.dp))
                     Text(
-                        text = uiState.errMessage,
+                        text = uiState.errorMessage,
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption
                     )

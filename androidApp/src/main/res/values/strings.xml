@@ -20,4 +20,5 @@
     <string name="gender_hint">Choose your gender</string>
     <string name="role_hint">Select your role</string>
     <string name="create_password_subheading">Make sure to use a strong password</string>
+    <string name="login_button_hint">Log in</string>
 </resources>

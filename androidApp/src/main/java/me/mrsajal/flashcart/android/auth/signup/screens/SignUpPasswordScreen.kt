@@ -1,5 +1,6 @@
 package me.mrsajal.flashcart.android.auth.signup.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,11 +19,13 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,26 +36,27 @@ import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.auth.common.CustomButton
 import me.mrsajal.flashcart.android.auth.signup.SignUpUiState
 import me.mrsajal.flashcart.android.common.util.components.CustomTextField
-import me.mrsajal.flashcart.android.common.util.routes.AuthStreamRoute
+import me.mrsajal.flashcart.android.common.util.routes.Routes
 
 @Composable
 fun PasswordScreen(
     navController: NavController,
-    authNavController: NavController,
-    modifier :Modifier = Modifier,
+    onSignUpClick:()->Unit,
+    modifier: Modifier = Modifier,
     uiState: SignUpUiState,
     onNavigateToHome: () -> Unit,
     buttonText: Int,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
 ) {
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = modifier.fillMaxWidth(),
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(AuthStreamRoute.Details.route) }) {
+                    IconButton(onClick = { navController.navigate(Routes.SignUpDetails.route) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             modifier = modifier.size(24.dp),
@@ -113,7 +117,7 @@ fun PasswordScreen(
                     onValueChange = onPasswordChange,
                     hint = R.string.password_hint,
                     isSingleLine = true,
-                    isValid =true,
+                    isValid = true,
                     isPasswordTextField = true,
                 )
                 Spacer(modifier = modifier.height(24.dp))
@@ -123,12 +127,12 @@ fun PasswordScreen(
                     hint = R.string.confirm_password_hint,
                     isSingleLine = true,
                     isPasswordTextField = true,
-                    isValid = if(uiState.errMessage==null) true else false,
+                    isValid = if (uiState.errorMessage == null) true else false,
                 )
-                if (uiState.errMessage != null) {
+                if (uiState.errorMessage != null) {
                     Spacer(modifier = modifier.height(8.dp))
                     Text(
-                        text = uiState.errMessage,
+                        text = uiState.errorMessage,
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption
                     )
@@ -136,10 +140,21 @@ fun PasswordScreen(
             }
             CustomButton(
                 text = stringResource(buttonText),
-                onClick = onNavigateToHome
+                onClick = onSignUpClick
             )
             println("The user Details are ${uiState.username} ${uiState.age} ${uiState.gender} ${uiState.userRole}, email is ${uiState.email} phone number is ${uiState.phoneNumber} password is ${uiState.password} confirm password is ${uiState.confirmPassword}")
 
+        }
+    }
+    LaunchedEffect(
+        key1 = uiState.authSuccess,
+        key2 = uiState.errorMessage
+    ) {
+        if(uiState.authSuccess){
+            onNavigateToHome()
+        }
+        if(uiState.errorMessage!=null){
+            Toast.makeText(context, uiState.errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 }

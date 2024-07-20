@@ -28,7 +28,7 @@ class SignupViewModel(
             if (validationResult != null) {
                 uiState = uiState.copy(
                     isAuthenticating = false,
-                    errMessage = validationResult
+                    errorMessage = validationResult
                 )
                 return@launch
             }
@@ -57,7 +57,7 @@ class SignupViewModel(
                 is Result.Error -> {
                     uiState.copy(
                         isAuthenticating = false,
-                        errMessage = authResultData.message
+                        errorMessage = authResultData.message
                     )
                 }
             }
@@ -174,10 +174,10 @@ class SignupViewModel(
     fun onUsernameContinue(): Boolean {
         val validationResult = validateUsername()
         return if (validationResult != null) {
-            uiState = uiState.copy(errMessage = validationResult)
+            uiState = uiState.copy(errorMessage = validationResult)
             false
         } else {
-            uiState = uiState.copy(errMessage = null)
+            uiState = uiState.copy(errorMessage = null)
             true
         }
     }
@@ -185,10 +185,10 @@ class SignupViewModel(
     fun onEmailContinue(): Boolean {
         val validationResult = validateEmail()
         return if (validationResult != null) {
-            uiState = uiState.copy(errMessage = validationResult)
+            uiState = uiState.copy(errorMessage = validationResult)
             false
         } else {
-            uiState = uiState.copy(errMessage = null)
+            uiState = uiState.copy(errorMessage = null)
             true
         }
     }
@@ -196,10 +196,10 @@ class SignupViewModel(
     fun onPasswordContinue(): Boolean {
         val validationResult = validatePassword()
         return if (validationResult != null) {
-            uiState = uiState.copy(errMessage = validationResult)
+            uiState = uiState.copy(errorMessage = validationResult)
             false
         } else {
-            uiState = uiState.copy(errMessage = null)
+            uiState = uiState.copy(errorMessage = null)
             true
         }
     }
@@ -207,10 +207,10 @@ class SignupViewModel(
     fun onAgeContinue(): Boolean {
         val validationResult = validateAge()
         return if (validationResult != null) {
-            uiState = uiState.copy(errMessage = validationResult)
+            uiState = uiState.copy(errorMessage = validationResult)
             false
         } else {
-            uiState = uiState.copy(errMessage = null)
+            uiState = uiState.copy(errorMessage = null)
             true
         }
     }
@@ -218,10 +218,10 @@ class SignupViewModel(
     fun onPhoneNumberContinue(): Boolean {
         val validationResult = validatePhoneNumber()
         return if (validationResult != null) {
-            uiState = uiState.copy(errMessage = validationResult)
+            uiState = uiState.copy(errorMessage = validationResult)
             false
         } else {
-            uiState = uiState.copy(errMessage = null)
+            uiState = uiState.copy(errorMessage = null)
             true
         }
     }
@@ -238,6 +238,6 @@ data class SignUpUiState(
     val userRole: String = "",
     val age: String? = "",
     val isAuthenticating: Boolean = false,
-    val errMessage: String? = null,
+    val errorMessage: String? = null,
     val authSuccess: Boolean = false,
 )

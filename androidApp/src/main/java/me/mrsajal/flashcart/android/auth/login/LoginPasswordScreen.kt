@@ -1,6 +1,7 @@
-package me.mrsajal.flashcart.android.auth.signup.screens
+package me.mrsajal.flashcart.android.auth.login
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -8,12 +9,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,29 +25,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import me.mrsajal.flashcart.android.auth.signup.SignUpUiState
 import me.mrsajal.flashcart.android.common.theming.AppTheme
-import me.mrsajal.flashcart.android.common.util.routes.AuthStreamRoute
 import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.auth.common.CustomButton
 import me.mrsajal.flashcart.android.common.util.components.CustomTextField
+import me.mrsajal.flashcart.android.common.util.routes.Routes
 
 @Composable
-fun EmailScreen(
+fun LoginPasswordScreen(
+    onLoginButtonClick:()->Unit,
     modifier: Modifier = Modifier,
     navController: NavController,
-    uiState: SignUpUiState,
-    onNavigateToMobileScreen: () -> Unit,
+    uiState: LoginUiState,
+    onNavigateToPasswordScreen: () -> Unit,
     @StringRes buttonText: Int,
-    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
 ) {
+
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = modifier.fillMaxWidth(),
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate(AuthStreamRoute.Mobile.route) }) {
+                    IconButton(onClick = { navController.navigate(Routes.LoginEmail.route) }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             modifier = modifier.size(24.dp),
@@ -72,7 +77,7 @@ fun EmailScreen(
                     .height(200.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.email),
+                    painter = painterResource(id = R.drawable.password),
                     contentDescription = null,
                     modifier = Modifier
                         .height(30.dp),
@@ -101,16 +106,17 @@ fun EmailScreen(
                 )
                 Spacer(modifier = modifier.height(24.dp))
                 CustomTextField(
-                    value = uiState.email,
-                    onValueChange = onEmailChange,
-                    hint = R.string.email_hint,
+                    value = uiState.password,
+                    onValueChange = onPasswordChange,
+                    hint = R.string.password_hint,
                     isSingleLine = true,
-                    isValid = if(uiState.errMessage==null) true else false,
+                    isPasswordTextField = true,
+                    isValid = if(uiState.errorMessage==null) true else false,
                 )
-                if (uiState.errMessage != null) {
+                if (uiState.errorMessage != null) {
                     Spacer(modifier = modifier.height(8.dp))
                     Text(
-                        text = uiState.errMessage,
+                        text = uiState.errorMessage,
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption
                     )
@@ -118,26 +124,37 @@ fun EmailScreen(
             }
             CustomButton(
                 text = stringResource(buttonText),
-                onClick = onNavigateToMobileScreen
+                onClick = onLoginButtonClick
             )
             println("The user email is ${uiState.email}")
-
+        }
+    }
+    LaunchedEffect(
+        key1 = uiState.authSuccess,
+        key2 = uiState.errorMessage
+    ) {
+        if(uiState.authSuccess){
+            onNavigateToPasswordScreen()
+        }
+        if(uiState.errorMessage!=null){
+            Toast.makeText(context, uiState.errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun EmailScreenPreview() {
+fun LoginPasswordScreenPreview() {
     AppTheme {
         val navController = rememberNavController()
-        val uiState = remember { SignUpUiState(email = "") }
-        EmailScreen(
+        val uiState = remember { LoginUiState(email = "") }
+        LoginPasswordScreen(
             navController = navController,
             uiState = uiState,
-            onNavigateToMobileScreen = { /*TODO*/ },
+            onNavigateToPasswordScreen = { /*TODO*/ },
             buttonText = android.R.string.ok,
-            onEmailChange = {}
+            onPasswordChange = {},
+            onLoginButtonClick = {}
         )
     }
 }
