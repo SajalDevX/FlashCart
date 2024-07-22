@@ -1,5 +1,8 @@
 package me.mrsajal.flashcart.products.data
 
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.Logger.Companion.setMinSeverity
+import co.touchlab.kermit.Severity
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
@@ -13,6 +16,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import me.mrsajal.flashcart.common.data.remote.KtorApi
 import me.mrsajal.flashcart.products.domain.model.ProductApiResponse
 
@@ -106,7 +110,9 @@ internal class ProductApiService : KtorApi() {
             data = httpResponse.body()
         )
     }
-
+    private val logger = Logger.withTag("ProductRepository").apply {
+        setMinSeverity(Severity.Debug)  // Change to desired severity level
+    }
     suspend fun getProductDetail(
         userToken: String,
         productId: String
@@ -131,20 +137,40 @@ internal class ProductApiService : KtorApi() {
         subCategoryId: String?,
         brandId: String?,
     ): ProductApiResponse {
-        val httpResponse = client.get {
-            endPoint(path = "product/all")
-            parameter("limit",limit)
-            parameter("offset",offset)
-            parameter("maxPrice",maxPrice)
-            parameter("minPrice",minPrice)
-            parameter("categoryId",categoryId)
-            parameter("subCategoryId",subCategoryId)
-            parameter("brandId",brandId)
-            setToken(userToken)
+        logger.i { "Fetching products with limit=$limit, offset=$offset, maxPrice=$maxPrice, minPrice=$minPrice, categoryId=$categoryId, subCategoryId=$subCategoryId, brandId=$brandId" }
+
+        return try {
+            val httpResponse = client.get {
+                endPoint(path = "product/get")
+                parameter("limit", limit)
+                parameter("offset", offset)
+                parameter("maxPrice", maxPrice)
+                parameter("minPrice", minPrice)
+                parameter("categoryId", categoryId)
+                parameter("subCategoryId", subCategoryId)
+                parameter("brandId", brandId)
+                setToken(userToken)
+            }
+
+            // Check the content type of the response
+            val contentType = httpResponse.headers["Content-Type"]
+            logger.i { "Response content type: $contentType" }
+
+            if (httpResponse.status == HttpStatusCode.Unauthorized) {
+                logger.e { "Unauthorized: Check your token or credentials" }
+                throw Exception("Unauthorized: Check your token or credentials")
+            }
+
+            return ProductApiResponse(
+                code = httpResponse.status,
+                data = httpResponse.body()
+            )
+
+
+        } catch (e: Exception) {
+            logger.e(e) { "Error occurred while fetching products: ${e.message}" }
+            throw e
         }
-        return ProductApiResponse(
-            code = httpResponse.status,
-            data = httpResponse.body()
-        )
     }
+
 }

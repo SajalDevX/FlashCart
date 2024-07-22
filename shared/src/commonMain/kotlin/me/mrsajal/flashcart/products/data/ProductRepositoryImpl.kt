@@ -8,12 +8,20 @@ import me.mrsajal.flashcart.products.domain.repository.ProductRepository
 import me.mrsajal.flashcart.common.utils.Result
 import me.mrsajal.flashcart.products.domain.model.RemoteProductEntity
 import okio.IOException
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.Logger.Companion.setMinSeverity
+import co.touchlab.kermit.Severity
 
 internal class ProductRepositoryImpl(
     private val productApiService: ProductApiService,
     private val dispatcher: DispatcherProvider,
     private val userPreferences: UserPreferences
 ) : ProductRepository {
+
+    private val logger = Logger.withTag("ProductRepository").apply {
+        setMinSeverity(Severity.Debug)
+    }
+
     override suspend fun addProduct(
         addProduct: AddProductRequest
     ): Result<Boolean> {
@@ -47,7 +55,6 @@ internal class ProductRepositoryImpl(
 
 
     override suspend fun updateProduct(
-        userToken: String,
         productId: String,
         updateProduct: UpdateProductRequest
     ): Result<Boolean> {
@@ -84,7 +91,6 @@ internal class ProductRepositoryImpl(
     }
 
     override suspend fun getProductById(
-        userToken: String,
         productId: String
     ): Result<RemoteProductEntity> {
         return withContext(dispatcher.io) {
@@ -119,7 +125,6 @@ internal class ProductRepositoryImpl(
     }
 
     override suspend fun uploadImage(
-        userToken: String,
         productId: String,
         imageFileName: String,
         imageBytes: ByteArray
@@ -159,7 +164,6 @@ internal class ProductRepositoryImpl(
 
 
     override suspend fun deleteProduct(
-        userToken: String,
         productId: String
     ): Result<Boolean> {
         return withContext(dispatcher.io) {
@@ -194,7 +198,6 @@ internal class ProductRepositoryImpl(
     }
 
     override suspend fun getProductDetail(
-        userToken: String,
         productId: String
     ): Result<RemoteProductEntity> {
         return withContext(dispatcher.io) {
@@ -229,37 +232,32 @@ internal class ProductRepositoryImpl(
     }
 
     override suspend fun getProductsForAll(
-        userToken: String,
         limit: Int,
         offset: Int,
         maxPrice: Double?,
-        minPrice: Double?,
-        categoryId: String?,
-        subCategoryId: String?,
-        brandId: String?
+        minPrice: Double?
     ): Result<List<RemoteProductEntity>> {
         return withContext(dispatcher.io) {
             try {
                 val userData = userPreferences.getUserData()
+                val userToken = userData.token
+                logger.i { "User Token: $userToken $userData" }
+
                 val apiResponse = productApiService.getProductsForAll(
-                    userData.token,
+                    userToken,
                     limit,
                     offset,
                     maxPrice,
                     minPrice,
-                    categoryId,
-                    subCategoryId,
-                    brandId
+                    categoryId = null,
+                    subCategoryId = null,
+                    brandId = null
                 )
-                if (apiResponse.data.product == null) {
-                    return@withContext Result.Error(message = "Product not found")
-                }
-                when (apiResponse.code) {
 
+
+                when (apiResponse.code) {
                     HttpStatusCode.OK -> {
-                        Result.Success(
-                            data = apiResponse.data.allProducts,
-                        )
+                        Result.Success(data = apiResponse.data.allProducts)
                     }
 
                     HttpStatusCode.BadRequest -> {
@@ -267,6 +265,7 @@ internal class ProductRepositoryImpl(
                     }
 
                     else -> {
+                        logger.e { "Error: ${apiResponse.data.message}" }
                         Result.Error(message = "${apiResponse.data.message}")
                     }
                 }
@@ -277,4 +276,128 @@ internal class ProductRepositoryImpl(
             }
         }
     }
+
+    override suspend fun getProductByCategory(categoryId: String): Result<List<RemoteProductEntity>> {
+        return withContext(dispatcher.io) {
+            try {
+                val userData = userPreferences.getUserData()
+                val userToken = userData.token
+                logger.i { "User Token: $userToken $userData" }
+
+                val apiResponse = productApiService.getProductsForAll(
+                    userToken = userToken,
+                    categoryId = categoryId,
+                    subCategoryId = null,
+                    brandId = null,
+                    limit = 10,
+                    offset = 0,
+                    maxPrice = null,
+                    minPrice = null
+                )
+
+
+                when (apiResponse.code) {
+                    HttpStatusCode.OK -> {
+                        Result.Success(data = apiResponse.data.allProducts)
+                    }
+
+                    HttpStatusCode.BadRequest -> {
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+
+                    else -> {
+                        logger.e { "Error: ${apiResponse.data.message}" }
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+                }
+            } catch (ioException: IOException) {
+                Result.Error(message = "No Internet")
+            } catch (exception: Throwable) {
+                Result.Error(message = "${exception.message}")
+            }
+        }
+    }
+
+    override suspend fun getProductBySubCategory(subCategoryId: String): Result<List<RemoteProductEntity>> {
+        return withContext(dispatcher.io) {
+            try {
+                val userData = userPreferences.getUserData()
+                val userToken = userData.token
+                logger.i { "User Token: $userToken $userData" }
+
+                val apiResponse = productApiService.getProductsForAll(
+                    userToken = userToken,
+                    categoryId = null,
+                    subCategoryId = subCategoryId,
+                    brandId = null,
+                    limit = 10,
+                    offset = 0,
+                    maxPrice = null,
+                    minPrice = null
+                )
+
+
+                when (apiResponse.code) {
+                    HttpStatusCode.OK -> {
+                        Result.Success(data = apiResponse.data.allProducts)
+                    }
+
+                    HttpStatusCode.BadRequest -> {
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+
+                    else -> {
+                        logger.e { "Error: ${apiResponse.data.message}" }
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+                }
+            } catch (ioException: IOException) {
+                Result.Error(message = "No Internet")
+            } catch (exception: Throwable) {
+                Result.Error(message = "${exception.message}")
+            }
+        }
+    }
+
+    override suspend fun getProductByBrand(brandId: String): Result<List<RemoteProductEntity>> {
+        return withContext(dispatcher.io) {
+            try {
+                val userData = userPreferences.getUserData()
+                val userToken = userData.token
+                logger.i { "User Token: $userToken $userData" }
+
+                val apiResponse = productApiService.getProductsForAll(
+                    userToken = userToken,
+                    categoryId = null,
+                    subCategoryId = null,
+                    brandId = brandId,
+                    limit = 10,
+                    offset = 0,
+                    maxPrice = null,
+                    minPrice = null
+                )
+
+
+                when (apiResponse.code) {
+                    HttpStatusCode.OK -> {
+                        Result.Success(data = apiResponse.data.allProducts)
+                    }
+
+                    HttpStatusCode.BadRequest -> {
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+
+                    else -> {
+                        logger.e { "Error: ${apiResponse.data.message}" }
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+                }
+            } catch (ioException: IOException) {
+                Result.Error(message = "No Internet")
+            } catch (exception: Throwable) {
+                Result.Error(message = "${exception.message}")
+            }
+        }
+    }
+
 }

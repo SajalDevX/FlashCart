@@ -11,7 +11,6 @@ class UpdateProductUseCase : KoinComponent {
     private val repository by inject<ProductRepository>()
 
     suspend operator fun invoke(
-        userToken: String,
         productId: String,
         categoryId: String,
         subCategoryId: String?,
@@ -29,6 +28,6 @@ class UpdateProductUseCase : KoinComponent {
         val product = UpdateProductRequest(
             categoryId, subCategoryId, brandId, productName, productCode, productQuantity, productDetail, price,discountPrice, videoLink, hotDeal, buyOneGetOne
         )
-        return repository.updateProduct(userToken,productId,product)
+        return repository.updateProduct(productId,product)
     }
 }

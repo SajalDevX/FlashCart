@@ -12,41 +12,44 @@ interface ProductRepository {
     ): Result<Boolean>
 
     suspend fun updateProduct(
-        userToken: String,
         productId: String,
         updateProduct: UpdateProductRequest
     ): Result<Boolean>
 
     suspend fun getProductById(
-        userToken: String,
         productId: String
     ):Result<RemoteProductEntity>
 
     suspend fun uploadImage(
-        userToken: String,
         productId: String,
         imageFileName: String,
         imageBytes: ByteArray
     ): Result<Boolean>
 
     suspend fun deleteProduct(
-        userToken: String,
         productId: String
     ): Result<Boolean>
 
     suspend fun getProductDetail(
-        userToken: String,
         productId: String
     ): Result<RemoteProductEntity>
 
     suspend fun getProductsForAll(
-        userToken: String,
         limit: Int,
         offset: Int,
         maxPrice: Double?,
-        minPrice: Double?,
-        categoryId: String?,
-        subCategoryId: String?,
-        brandId: String?,
+        minPrice: Double?
     ): Result<List<RemoteProductEntity>>
+
+    suspend fun getProductByCategory(
+        categoryId: String
+    ):Result<List<RemoteProductEntity>>
+
+    suspend fun getProductBySubCategory(
+        subCategoryId: String
+    ):Result<List<RemoteProductEntity>>
+
+    suspend fun getProductByBrand(
+        brandId: String
+    ):Result<List<RemoteProductEntity>>
 }

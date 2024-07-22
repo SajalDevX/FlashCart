@@ -34,6 +34,7 @@ kotlin {
             implementation(libs.ktor.client.logging.jvm)
             implementation(libs.ktor.client.cio)
             api(libs.koin.core)
+            implementation(libs.kermit)
 
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.kotlinx.datetime)

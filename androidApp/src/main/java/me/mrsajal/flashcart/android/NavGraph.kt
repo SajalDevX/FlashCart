@@ -14,6 +14,7 @@ import me.mrsajal.flashcart.android.auth.signup.screens.PasswordScreen
 import me.mrsajal.flashcart.android.auth.signup.screens.UserDetailScreen
 import me.mrsajal.flashcart.android.common.util.routes.Routes
 import me.mrsajal.flashcart.android.presentation.home.HomeScreen
+import me.mrsajal.flashcart.android.presentation.home.HomeScreenViewModel
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -23,9 +24,15 @@ fun NavGraph(
 ) {
     val navController = rememberNavController()
     val signUpViewModel: SignupViewModel = koinViewModel()
-    val authUiState = signUpViewModel.uiState
+    val signUpUiState = signUpViewModel.uiState
+
     val loginViewModel: LoginViewModel = koinViewModel()
     val loginUiState = loginViewModel.uiState
+
+    val homeViewModel: HomeScreenViewModel = koinViewModel()
+    val homeUiState = homeViewModel.homeUiState
+
+
     if (uiState is MainActivityUiState.Success) {
         val startDestination = if (uiState.currentUser.token.isNotEmpty()) {
             Routes.Home.route
@@ -39,7 +46,7 @@ fun NavGraph(
             composable(Routes.SignUpEmail.route) {
                 EmailScreen(
                     navController = navController,
-                    uiState = authUiState,
+                    uiState = signUpUiState,
                     onNavigateToMobileScreen = {
                         if (signUpViewModel.onEmailContinue()) {
                             navController.navigate(Routes.SignUpMobile.route) {
@@ -56,7 +63,7 @@ fun NavGraph(
             composable(Routes.SignUpMobile.route) {
                 MobileScreen(
                     navController = navController,
-                    uiState = authUiState,
+                    uiState = signUpUiState,
                     onNavigateToDetailsScreen = {
                         if (signUpViewModel.onPhoneNumberContinue()) {
                             navController.navigate(Routes.SignUpDetails.route) {
@@ -78,7 +85,7 @@ fun NavGraph(
             composable(Routes.SignUpDetails.route) {
                 UserDetailScreen(
                     navController = navController,
-                    uiState = authUiState,
+                    uiState = signUpUiState,
                     onNavigateToPasswordScreen = {
                         if (signUpViewModel.onUsernameContinue() && signUpViewModel.onAgeContinue()) {
                             navController.navigate(Routes.SignUpPassword.route) {
@@ -98,7 +105,7 @@ fun NavGraph(
             composable(Routes.SignUpPassword.route) {
                 PasswordScreen(
                     navController = navController,
-                    uiState = authUiState,
+                    uiState = signUpUiState,
                     onNavigateToHome = {
                         navController.navigate(Routes.Home.route) {
                             popUpTo(Routes.SignUpEmail.route) {
@@ -156,7 +163,9 @@ fun NavGraph(
                 OnBoardingScreen(navController = navController)
             }
             composable(Routes.Home.route) {
-                HomeScreen()
+                HomeScreen(
+                    homeUiState
+                )
             }
         }
     }

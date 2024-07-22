@@ -14,6 +14,10 @@ data class UserSettings(
 
 fun AuthResultData.toUserSettings(): UserSettings {
     return UserSettings(
-        userId, name, imageUrl, userRole, token,
+        userId = userId,
+        name = name,
+        imageUrl = imageUrl,
+        userRole = userRole,
+        token = token
     )
 }

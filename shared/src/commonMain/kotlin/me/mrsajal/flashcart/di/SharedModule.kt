@@ -6,6 +6,7 @@ import me.mrsajal.flashcart.auth.domain.repository.AuthRepository
 import me.mrsajal.flashcart.auth.domain.usecase.SignInUseCase
 import me.mrsajal.flashcart.auth.domain.usecase.SignUpUseCase
 import me.mrsajal.flashcart.common.utils.provideDispatcher
+import me.mrsajal.flashcart.products.data.ProductApiService
 import me.mrsajal.flashcart.products.data.ProductRepositoryImpl
 import me.mrsajal.flashcart.products.domain.repository.ProductRepository
 import me.mrsajal.flashcart.products.domain.usecase.AddProductUseCase
@@ -22,6 +23,7 @@ private val authModule = module {
     factory { AuthService() }
     factory { SignUpUseCase() }
     factory { SignInUseCase() }
+    factory { ProductApiService() }
     single<ProductRepository> { ProductRepositoryImpl(get(), get(), get()) }
     factory { AddProductUseCase() }
     factory { DeleteProductUseCase() }
