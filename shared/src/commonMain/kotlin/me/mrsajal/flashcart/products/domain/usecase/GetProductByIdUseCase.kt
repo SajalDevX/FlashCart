@@ -10,9 +10,8 @@ class GetProductByIdUseCase : KoinComponent {
     private val repository by inject<ProductRepository>()
 
     suspend operator fun invoke(
-        userToken: String,
         productId: String
     ): Result<RemoteProductEntity> {
-        return repository.getProductById(userToken, productId)
+        return repository.getProductById( productId)
     }
 }

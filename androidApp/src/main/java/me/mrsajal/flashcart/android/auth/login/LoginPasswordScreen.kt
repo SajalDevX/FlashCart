@@ -82,12 +82,12 @@ fun LoginPasswordScreen(
                     modifier = Modifier
                         .height(30.dp),
                     contentScale = ContentScale.Crop,
-                    colorFilter = ColorFilter.tint(Color.Green)
+                    colorFilter = ColorFilter.tint(Color(0xFF67C4A7))
 
                 )
                 Spacer(modifier = modifier.height(10.dp))
                 Text(
-                    text = stringResource(id = R.string.email_heading),
+                    text = stringResource(id = R.string.create_password),
                     modifier = modifier
                         .width(192.dp),
                     fontWeight = FontWeight(700),
@@ -96,7 +96,7 @@ fun LoginPasswordScreen(
                 )
                 Spacer(modifier = modifier.height(10.dp))
                 Text(
-                    text = stringResource(R.string.email_subheading),
+                    text = stringResource(R.string.create_password_subheading),
                     modifier = modifier
                         .height(40.dp)
                         .width(328.dp),

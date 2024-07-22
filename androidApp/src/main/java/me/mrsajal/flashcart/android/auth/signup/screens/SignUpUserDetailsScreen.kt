@@ -91,7 +91,7 @@ fun UserDetailScreen(
                     modifier = Modifier
                         .height(30.dp),
                     contentScale = ContentScale.Crop,
-                    colorFilter = if(isSystemInDarkTheme()){ ColorFilter.tint(Color.Green) }else{ColorFilter.tint(Color(0xFF008C0C))}
+                    colorFilter = if(isSystemInDarkTheme()){ ColorFilter.tint(Color(0xFF67C4A7)) }else{ColorFilter.tint(Color(0xFF008C0C))}
                 )
                 Spacer(modifier = modifier.height(10.dp))
                 Text(

@@ -9,9 +9,8 @@ class DeleteProductUseCase : KoinComponent {
     private val repository by inject<ProductRepository>()
 
     suspend operator fun invoke(
-        userToken: String,
         productId: String,
     ): Result<Boolean> {
-        return repository.deleteProduct(userToken, productId)
+        return repository.deleteProduct( productId)
     }
 }

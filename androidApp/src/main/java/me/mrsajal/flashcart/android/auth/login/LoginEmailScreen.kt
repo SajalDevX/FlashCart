@@ -77,7 +77,7 @@ fun LoginEmailScreen(
                     modifier = Modifier
                         .height(30.dp),
                     contentScale = ContentScale.Crop,
-                    colorFilter = ColorFilter.tint(Color.Green)
+                    colorFilter = ColorFilter.tint(Color(0xFF67C4A7))
 
                 )
                 Spacer(modifier = modifier.height(10.dp))

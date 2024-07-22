@@ -27,7 +27,7 @@ fun CustomButton(
                 .width(328.dp)
                 .height(54.dp),
             onClick = { onClick() },
-            colors = ButtonDefaults.buttonColors(Color(0xFF008C0C)),
+            colors = ButtonDefaults.buttonColors(Color(0xFF67C4A7)),
             shape = RoundedCornerShape(12.dp),
             elevation = ButtonDefaults.elevation(0.dp)
         ) {

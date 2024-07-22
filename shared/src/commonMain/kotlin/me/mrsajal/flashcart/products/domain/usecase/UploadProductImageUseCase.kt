@@ -9,11 +9,10 @@ class UploadProductImageUseCase : KoinComponent {
     private val repository by inject<ProductRepository>()
 
     suspend operator fun invoke(
-        userToken: String,
         productId: String,
         imageFileName: String,
         imageBytes: ByteArray
     ): Result<Boolean> {
-        return repository.uploadImage(userToken, productId,imageFileName, imageBytes)
+        return repository.uploadImage( productId,imageFileName, imageBytes)
     }
 }

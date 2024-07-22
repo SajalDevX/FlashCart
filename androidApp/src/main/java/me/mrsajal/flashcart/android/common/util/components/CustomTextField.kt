@@ -48,7 +48,7 @@ fun CustomTextField(
     }
 
     val borderColor = if (isValid) {
-        Color(0xFF008C0C)
+        Color(0xFF67C4A7)
     } else {
         Red
     }
@@ -122,7 +122,7 @@ fun CustomTextFieldPreview() {
             value = "",
             onValueChange = {},
             hint = R.string.loading_error_message,
-            isValid = false
+            isValid = true
         )
     }
 }

@@ -21,4 +21,5 @@
     <string name="role_hint">Select your role</string>
     <string name="create_password_subheading">Make sure to use a strong password</string>
     <string name="login_button_hint">Log in</string>
+    <string name="add_to_cart">Add to cart</string>
 </resources>
