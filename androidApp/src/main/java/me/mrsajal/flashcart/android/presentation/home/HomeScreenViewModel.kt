@@ -28,7 +28,7 @@ class HomeScreenViewModel(
         viewModelScope.launch {
             try {
                 val result = getAllProductsUseCase(
-                    limit = 3,
+                    limit = 10,
                     offset = 0,
                     maxPrice = null,
                     minPrice = null

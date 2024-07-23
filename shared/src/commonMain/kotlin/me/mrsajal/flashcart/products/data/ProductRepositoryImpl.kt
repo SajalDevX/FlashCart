@@ -251,7 +251,8 @@ internal class ProductRepositoryImpl(
                     minPrice,
                     categoryId = null,
                     subCategoryId = null,
-                    brandId = null
+                    brandId = null,
+                    searchQuery = null
                 )
 
 
@@ -292,7 +293,8 @@ internal class ProductRepositoryImpl(
                     limit = 10,
                     offset = 0,
                     maxPrice = null,
-                    minPrice = null
+                    minPrice = null,
+                    searchQuery = null
                 )
 
 
@@ -333,7 +335,8 @@ internal class ProductRepositoryImpl(
                     limit = 10,
                     offset = 0,
                     maxPrice = null,
-                    minPrice = null
+                    minPrice = null,
+                    searchQuery = null
                 )
 
 
@@ -374,11 +377,55 @@ internal class ProductRepositoryImpl(
                     limit = 10,
                     offset = 0,
                     maxPrice = null,
-                    minPrice = null
+                    minPrice = null,
+                    searchQuery = null
                 )
 
 
                 when (apiResponse.code) {
+                    HttpStatusCode.OK -> {
+                        Result.Success(data = apiResponse.data.allProducts)
+                    }
+
+                    HttpStatusCode.BadRequest -> {
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+
+                    else -> {
+                        logger.e { "Error: ${apiResponse.data.message}" }
+                        Result.Error(message = "${apiResponse.data.message}")
+                    }
+                }
+            } catch (ioException: IOException) {
+                Result.Error(message = "No Internet")
+            } catch (exception: Throwable) {
+                Result.Error(message = "${exception.message}")
+            }
+        }
+    }
+
+    override suspend fun getSearchProducts(searchQuery: String): Result<List<RemoteProductEntity>> {
+        return withContext(dispatcher.io) {
+            try {
+                val userData = userPreferences.getUserData()
+                val userToken = userData.token
+                logger.i { "User Token: $userToken $userData" }
+
+                val apiResponse = productApiService.getProductsForAll(
+                    userToken = userToken,
+                    categoryId = null,
+                    subCategoryId = null,
+                    brandId = null,
+                    limit = 10,
+                    offset = 0,
+                    maxPrice = null,
+                    minPrice = null,
+                    searchQuery = searchQuery
+                )
+
+
+                when (apiResponse.code) {
+
                     HttpStatusCode.OK -> {
                         Result.Success(data = apiResponse.data.allProducts)
                     }

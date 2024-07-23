@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteProductEntity(
-    val productId: String,
+    val productId: String ,
     val userId:String,
     val categoryId: String,
     val subCategoryId: String?,
@@ -21,6 +21,7 @@ data class RemoteProductEntity(
     val hotDeal: String?,
     val ratingId:List<String> = emptyList(),
     val buyOneGetOne: String?,
+    val images:List<String>?= emptyList()
 )
 @Serializable
 data class ProductApiResponseData(

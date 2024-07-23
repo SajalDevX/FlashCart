@@ -52,4 +52,8 @@ interface ProductRepository {
     suspend fun getProductByBrand(
         brandId: String
     ):Result<List<RemoteProductEntity>>
+
+    suspend fun getSearchProducts(
+        searchQuery: String
+    ):Result<List<RemoteProductEntity>>
 }

@@ -1,9 +1,11 @@
 package me.mrsajal.flashcart.android.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +34,7 @@ import me.mrsajal.flashcart.android.common.theming.AppTheme
 fun ProductHomeIcon(
     modifier: Modifier = Modifier,
     itemName: String,
-    itemPrice: Int,
+    itemPrice: Double,
     itemImage: String,
     onClick: () -> Unit
 ) {
@@ -51,33 +52,50 @@ fun ProductHomeIcon(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                modifier = modifier.weight(1f),
                 model = itemImage,
                 contentDescription = null,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(ratio = 1.5f)
+                    .weight(1f)
             )
             Column(
                 modifier = modifier
-                    .background(color = Color(0xFFFAFAFC))
+                    .background(
+                        color =
+                        if (isSystemInDarkTheme()) {
+                            Color(0xFF121212)
+                        } else {
+                            Color(0xFFFAFAFC)
+                        }
+                    )
                     .fillMaxSize()
-                    .weight(1f)
-                    .padding(),
+                    .weight(1f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = itemName,
                     fontSize = 12.sp,
-                    color = Color(0xFF393F42),
+                    color = if (isSystemInDarkTheme()) {
+                        Color(0xFFB0B0B0)
+                    } else {
+                        Color(0xFF393F42)
+                    },
                     modifier = modifier
                         .padding(horizontal = 12.dp)
                         .fillMaxWidth(),
                     fontWeight = FontWeight(300)
                 )
                 Text(
-                    text = "$ ${itemPrice.toDouble()}",
+                    text = "$ $itemPrice",
                     fontSize = 14.sp,
-                    color = Color(0xFF393F42),
+                    color = if (isSystemInDarkTheme()) {
+                        Color(0xFFB0B0B0)
+                    } else {
+                        Color(0xFF393F42)
+                    },
                     modifier = modifier
                         .padding(horizontal = 12.dp, 4.dp)
                         .fillMaxWidth(),
@@ -89,21 +107,34 @@ fun ProductHomeIcon(
                     modifier = modifier
                         .width(180.dp)
                         .align(Alignment.CenterHorizontally)
-                        .height(35.dp),
-                    colors = ButtonDefaults.buttonColors(Color(0xFF67C4A7))
+                        .height(36.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        if (!isSystemInDarkTheme()) {
+                            Color(0xFF67C4A7)
+                        } else {
+                            Color(0xFF4CAF93)
+                        }
+                    )
                 ) {
-                    Text(text = stringResource(id = R.string.add_to_cart), color = Color.White)
+                    Text(
+                        text = stringResource(id = R.string.add_to_cart),
+                        color = Color.White
+                    )
                 }
             }
         }
     }
 }
 
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun ProductHomeIconPreview() {
     AppTheme {
-        ProductHomeIcon(itemName = "Gaming Mouse", itemPrice = 32, itemImage = "") {
+        ProductHomeIcon(
+            itemName = "Gaming Mouse",
+            itemPrice = 32.0,
+            itemImage = ""
+        ) {
         }
     }
 }

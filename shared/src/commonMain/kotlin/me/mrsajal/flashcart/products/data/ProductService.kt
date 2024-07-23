@@ -134,6 +134,7 @@ internal class ProductApiService : KtorApi() {
         maxPrice: Double?,
         minPrice: Double?,
         categoryId: String?,
+        searchQuery:String?,
         subCategoryId: String?,
         brandId: String?,
     ): ProductApiResponse {
@@ -147,12 +148,12 @@ internal class ProductApiService : KtorApi() {
                 parameter("maxPrice", maxPrice)
                 parameter("minPrice", minPrice)
                 parameter("categoryId", categoryId)
+                parameter("searchQuery", searchQuery)
                 parameter("subCategoryId", subCategoryId)
                 parameter("brandId", brandId)
                 setToken(userToken)
             }
 
-            // Check the content type of the response
             val contentType = httpResponse.headers["Content-Type"]
             logger.i { "Response content type: $contentType" }
 

@@ -164,7 +164,7 @@ fun NavGraph(
             }
             composable(Routes.Home.route) {
                 HomeScreen(
-                    homeUiState
+                    homeUiState = homeUiState
                 )
             }
         }

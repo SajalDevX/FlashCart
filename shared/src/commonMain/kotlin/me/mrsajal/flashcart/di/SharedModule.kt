@@ -13,6 +13,10 @@ import me.mrsajal.flashcart.products.domain.usecase.AddProductUseCase
 import me.mrsajal.flashcart.products.domain.usecase.DeleteProductUseCase
 import me.mrsajal.flashcart.products.domain.usecase.GetAllProductsUseCase
 import me.mrsajal.flashcart.products.domain.usecase.GetProductByIdUseCase
+import me.mrsajal.flashcart.products.domain.usecase.GetProductsByBrand
+import me.mrsajal.flashcart.products.domain.usecase.GetProductsByCategory
+import me.mrsajal.flashcart.products.domain.usecase.GetProductsBySubCategory
+import me.mrsajal.flashcart.products.domain.usecase.SearchProductsUseCase
 import me.mrsajal.flashcart.products.domain.usecase.UpdateProductUseCase
 import me.mrsajal.flashcart.products.domain.usecase.UploadProductImageUseCase
 import org.koin.dsl.module
@@ -31,6 +35,10 @@ private val authModule = module {
     factory { GetProductByIdUseCase() }
     factory { UpdateProductUseCase() }
     factory { UploadProductImageUseCase() }
+    factory { GetProductsByCategory() }
+    factory { GetProductsBySubCategory() }
+    factory { GetProductsByBrand() }
+    factory { SearchProductsUseCase() }
 }
 
 private val utilityModule = module {

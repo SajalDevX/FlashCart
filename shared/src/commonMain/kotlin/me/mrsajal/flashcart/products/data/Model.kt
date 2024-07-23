@@ -17,8 +17,7 @@ data class AddProductRequest(
     val videoLink: String?,
     val hotDeal: String?,
     val buyOneGetOne: String?,
-    val imageOne: String?=null,
-    val imageTwo: String?=null,
+    val images: List<String> = emptyList(),
 )
 
 @Serializable
@@ -35,6 +34,5 @@ data class UpdateProductRequest(
     val videoLink: String? = null,
     val hotDeal: String? = null,
     val buyOneGetOne: String? = null,
-    val imageOne: String? = null,
-    val imageTwo: String? = null
+    val images: List<String> = emptyList(),
 )
