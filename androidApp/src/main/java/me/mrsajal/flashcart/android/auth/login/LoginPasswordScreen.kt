@@ -37,7 +37,7 @@ fun LoginPasswordScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     uiState: LoginUiState,
-    onNavigateToPasswordScreen: () -> Unit,
+    onNavigateToHomeScreen: () -> Unit,
     @StringRes buttonText: Int,
     onPasswordChange: (String) -> Unit,
 ) {
@@ -134,7 +134,7 @@ fun LoginPasswordScreen(
         key2 = uiState.errorMessage
     ) {
         if(uiState.authSuccess){
-            onNavigateToPasswordScreen()
+            onNavigateToHomeScreen()
         }
         if(uiState.errorMessage!=null){
             Toast.makeText(context, uiState.errorMessage, Toast.LENGTH_SHORT).show()
@@ -151,7 +151,7 @@ fun LoginPasswordScreenPreview() {
         LoginPasswordScreen(
             navController = navController,
             uiState = uiState,
-            onNavigateToPasswordScreen = { /*TODO*/ },
+            onNavigateToHomeScreen = { /*TODO*/ },
             buttonText = android.R.string.ok,
             onPasswordChange = {},
             onLoginButtonClick = {}

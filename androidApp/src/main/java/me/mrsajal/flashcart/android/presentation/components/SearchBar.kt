@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -119,8 +118,12 @@ fun Modifier.searchBar(): Modifier = composed {
 @Composable
 fun SearchBarPreview() {
     AppTheme {
-        SearchBar(text = "", onValueChange = {}, readOnly = false) {
-
-        }
+        SearchBar(
+            text = "",
+            onClick = {},
+            onValueChange = {},
+            readOnly = false,
+            onSearch = {}
+        )
     }
 }

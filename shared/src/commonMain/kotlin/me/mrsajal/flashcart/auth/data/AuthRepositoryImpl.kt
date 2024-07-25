@@ -38,6 +38,8 @@ internal class AuthRepositoryImpl(
                     userPreferences.setUserData(
                         response.data.toAuthResultData().toUserSettings()
                     )
+                    println("AuthRepositoryImpl User token saved: ${response.data.token}")
+
                     Result.Success(
                         data = response.data.toAuthResultData()
                     )
@@ -64,6 +66,11 @@ internal class AuthRepositoryImpl(
                     userPreferences.setUserData(
                         response.data.toAuthResultData().toUserSettings()
                     )
+
+                   println("AuthRepositoryImpl User token saved: ${response.data.token}")
+                    val retrievedUserData = userPreferences.getUserData()
+                    println("AuthRepositoryImpl Retrieved token: ${retrievedUserData.token}")
+
                     Result.Success(
                         data = response.data.toAuthResultData()
                     )
