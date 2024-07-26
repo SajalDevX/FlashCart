@@ -12,6 +12,12 @@ import me.mrsajal.flashcart.features.brands.domain.repositpry.BrandRepository
 import me.mrsajal.flashcart.features.brands.domain.usecases.AddBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.DeleteBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.GetBrandsUseCase
+import me.mrsajal.flashcart.features.product_category.data.CategoryApiService
+import me.mrsajal.flashcart.features.product_category.domain.repository.CategoryRepository
+import me.mrsajal.flashcart.features.product_category.domain.repository.CategoryRepositoryImpl
+import me.mrsajal.flashcart.features.product_category.domain.usecases.AddCategoryUseCase
+import me.mrsajal.flashcart.features.product_category.domain.usecases.DeleteCategoryUseCase
+import me.mrsajal.flashcart.features.product_category.domain.usecases.GetProductCategoryUseCase
 import me.mrsajal.flashcart.features.product_review.data.ReviewApiService
 import me.mrsajal.flashcart.features.product_review.data.ReviewRepositoryImpl
 import me.mrsajal.flashcart.features.product_review.domain.repository.ReviewRepository
@@ -69,6 +75,14 @@ private val brandModule = module {
     factory { GetBrandsUseCase() }
     factory { DeleteBrandUseCase() }
 }
+private val categoryModule = module {
+    factory { CategoryApiService() }
+    single<CategoryRepository> { CategoryRepositoryImpl(get(), get(), get()) }
+    factory { AddCategoryUseCase() }
+    factory { GetProductCategoryUseCase() }
+    factory { DeleteCategoryUseCase() }
+}
+
 private val utilityModule = module {
     factory { provideDispatcher() }
 }

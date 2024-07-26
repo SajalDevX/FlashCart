@@ -54,7 +54,7 @@ internal class CategoryRepositoryImpl(
         }
     }
 
-    override suspend fun deleteCategory(categoryId: String,userToken:String): Result<Boolean> {
+    override suspend fun deleteCategory(categoryId: String): Result<Boolean> {
         return withContext(dispatcher.io) {
             try {
                 val userData = userPreferences.getUserData()
@@ -87,7 +87,6 @@ internal class CategoryRepositoryImpl(
     }
 
     override suspend fun getCategory(
-        userToken:String,
         limit: Int,
         offset: Int
     ): Result<List<RemoteProductCategoryEntity>> {
