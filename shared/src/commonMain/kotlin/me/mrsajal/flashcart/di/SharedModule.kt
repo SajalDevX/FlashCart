@@ -6,6 +6,12 @@ import me.mrsajal.flashcart.auth.domain.repository.AuthRepository
 import me.mrsajal.flashcart.auth.domain.usecase.SignInUseCase
 import me.mrsajal.flashcart.auth.domain.usecase.SignUpUseCase
 import me.mrsajal.flashcart.common.utils.provideDispatcher
+import me.mrsajal.flashcart.features.brands.data.BrandApiService
+import me.mrsajal.flashcart.features.brands.data.BrandRepositoryImpl
+import me.mrsajal.flashcart.features.brands.domain.repositpry.BrandRepository
+import me.mrsajal.flashcart.features.brands.domain.usecases.AddBrandUseCase
+import me.mrsajal.flashcart.features.brands.domain.usecases.DeleteBrandUseCase
+import me.mrsajal.flashcart.features.brands.domain.usecases.GetBrandsUseCase
 import me.mrsajal.flashcart.features.product_review.data.ReviewApiService
 import me.mrsajal.flashcart.features.product_review.data.ReviewRepositoryImpl
 import me.mrsajal.flashcart.features.product_review.domain.repository.ReviewRepository
@@ -34,7 +40,6 @@ private val authModule = module {
     factory { SignUpUseCase() }
     factory { SignInUseCase() }
 }
-
 private val productModule = module {
     factory { ProductApiService() }
     single<ProductRepository> { ProductRepositoryImpl(get(), get(), get()) }
@@ -57,8 +62,13 @@ private val reviewModule = module {
     factory { GetProductReviewUseCase() }
     factory { DeleteReviewUseCase() }
 }
-
-
+private val brandModule = module {
+    factory { BrandApiService() }
+    single<BrandRepository> { BrandRepositoryImpl(get(), get(), get()) }
+    factory { AddBrandUseCase() }
+    factory { GetBrandsUseCase() }
+    factory { DeleteBrandUseCase() }
+}
 private val utilityModule = module {
     factory { provideDispatcher() }
 }
@@ -68,5 +78,6 @@ fun getSharedModules() = listOf(
     utilityModule,
     platformModule,
     productModule,
-    reviewModule
+    reviewModule,
+    brandModule
 )
