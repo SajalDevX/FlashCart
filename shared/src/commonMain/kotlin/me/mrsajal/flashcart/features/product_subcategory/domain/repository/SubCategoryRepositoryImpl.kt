@@ -1,32 +1,31 @@
-package me.mrsajal.flashcart.features.product_category.domain.repository
+package me.mrsajal.flashcart.features.product_subcategory.domain.repository
 
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.withContext
 import me.mrsajal.flashcart.common.data.local.UserPreferences
 import me.mrsajal.flashcart.common.utils.DispatcherProvider
-import me.mrsajal.flashcart.features.brands.data.BrandApiService
-import me.mrsajal.flashcart.features.product_category.data.RemoteProductCategoryEntity
-import me.mrsajal.flashcart.features.product_category.domain.model.CategoryTextParams
-import okio.IOException
-import  me.mrsajal.flashcart.common.utils.Result
-import me.mrsajal.flashcart.features.product_category.data.CategoryApiService
+import me.mrsajal.flashcart.features.product_subcategory.data.RemoteProductSubCategoryEntity
+import me.mrsajal.flashcart.features.product_subcategory.data.SubCategoryApiService
+import me.mrsajal.flashcart.features.product_subcategory.domain.model.SubCategoryTextParams
+import me.mrsajal.flashcart.common.utils.Result
 
-internal class CategoryRepositoryImpl(
-    private val categoryApiService: CategoryApiService,
+internal class SubCategoryRepositoryImpl(
     private val userPreferences: UserPreferences,
+    private val subCategoryApiService: SubCategoryApiService,
     private val dispatcher: DispatcherProvider
-) : CategoryRepository {
-    override suspend fun createCategory(
-        categoryData: CategoryTextParams,
+) : SubCategoryRepository {
+
+    override suspend fun createSubCategory(
+        subCategoryData: SubCategoryTextParams,
         fileData: ByteArray,
         fileName: String
-    ):Result<Boolean> {
-        return withContext(dispatcher.io) {
+    ): Result<Boolean> {
+        return withContext(dispatcher.io){
             try {
                 val userData = userPreferences.getUserData()
-                val apiResponse = categoryApiService.addCategory(
+                val apiResponse = subCategoryApiService.createSubcategory(
                     userToken = userData.token,
-                    categoryData = categoryData,
+                    subCategoryData = subCategoryData,
                     fileData = fileData,
                     fileName = fileName
                 )
@@ -38,29 +37,28 @@ internal class CategoryRepositoryImpl(
                     }
 
                     HttpStatusCode.BadRequest -> {
-                       Result.Error(message = apiResponse.data.message)
+                        Result.Error(message = apiResponse.data.message)
                     }
 
                     else -> {
                         Result.Error(message = apiResponse.data.message)
                     }
                 }
-
-            } catch (ioException: IOException) {
+            }catch (ioException: okio.IOException) {
                 Result.Error(message = "No Internet")
             } catch (exception: Throwable) {
-               Result.Error(message = "${exception.message}")
+                Result.Error(message = "${exception.message}")
             }
         }
     }
 
-    override suspend fun deleteCategory(categoryId: String): Result<Boolean> {
-        return withContext(dispatcher.io) {
+    override suspend fun deleteSubCategory(subCategoryId: String): Result<Boolean> {
+        return withContext(dispatcher.io){
             try {
                 val userData = userPreferences.getUserData()
-                val apiResponse = categoryApiService.deleteCategory(
+                val apiResponse = subCategoryApiService.deleteSubCategory(
                     userToken = userData.token,
-                    categoryId = categoryId
+                    subCategoryId = subCategoryId
                 )
                 when (apiResponse.code) {
                     HttpStatusCode.OK -> {
@@ -77,31 +75,31 @@ internal class CategoryRepositoryImpl(
                         Result.Error(message = apiResponse.data.message)
                     }
                 }
-
-            } catch (ioException: IOException) {
+            }catch (ioException: okio.IOException) {
                 Result.Error(message = "No Internet")
             } catch (exception: Throwable) {
                 Result.Error(message = "${exception.message}")
             }
-        }
-    }
+        }    }
 
-    override suspend fun getCategory(
+    override suspend fun getSubCategories(
+        categoryId: String,
         limit: Int,
         offset: Int
-    ): Result<List<RemoteProductCategoryEntity>> {
-        return withContext(dispatcher.io) {
+    ): Result<List<RemoteProductSubCategoryEntity>> {
+        return withContext(dispatcher.io){
             try {
                 val userData = userPreferences.getUserData()
-                val apiResponse = categoryApiService.getCategories(
+                val apiResponse = subCategoryApiService.getSubCategories(
                     userToken = userData.token,
                     limit = limit,
-                    offset=offset
+                    offset = offset,
+                    categoryId = categoryId
                 )
                 when (apiResponse.code) {
                     HttpStatusCode.OK -> {
                         Result.Success(
-                            data = apiResponse.data.categories
+                            data = apiResponse.data.subCategories
                         )
                     }
 
@@ -113,8 +111,7 @@ internal class CategoryRepositoryImpl(
                         Result.Error(message = apiResponse.data.message)
                     }
                 }
-
-            } catch (ioException: IOException) {
+            }catch (ioException: okio.IOException) {
                 Result.Error(message = "No Internet")
             } catch (exception: Throwable) {
                 Result.Error(message = "${exception.message}")

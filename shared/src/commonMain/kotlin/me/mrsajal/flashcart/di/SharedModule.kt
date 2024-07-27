@@ -14,7 +14,7 @@ import me.mrsajal.flashcart.features.brands.domain.usecases.DeleteBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.GetBrandsUseCase
 import me.mrsajal.flashcart.features.product_category.data.CategoryApiService
 import me.mrsajal.flashcart.features.product_category.domain.repository.CategoryRepository
-import me.mrsajal.flashcart.features.product_category.domain.repository.CategoryRepositoryImpl
+import me.mrsajal.flashcart.features.product_category.data.CategoryRepositoryImpl
 import me.mrsajal.flashcart.features.product_category.domain.usecases.AddCategoryUseCase
 import me.mrsajal.flashcart.features.product_category.domain.usecases.DeleteCategoryUseCase
 import me.mrsajal.flashcart.features.product_category.domain.usecases.GetProductCategoryUseCase
@@ -25,6 +25,12 @@ import me.mrsajal.flashcart.features.product_review.domain.usecases.AddReviewUse
 import me.mrsajal.flashcart.features.product_review.domain.usecases.DeleteReviewUseCase
 import me.mrsajal.flashcart.features.product_review.domain.usecases.EditReviewUseCase
 import me.mrsajal.flashcart.features.product_review.domain.usecases.GetProductReviewUseCase
+import me.mrsajal.flashcart.features.product_subcategory.data.SubCategoryApiService
+import me.mrsajal.flashcart.features.product_subcategory.domain.repository.SubCategoryRepository
+import me.mrsajal.flashcart.features.product_subcategory.domain.repository.SubCategoryRepositoryImpl
+import me.mrsajal.flashcart.features.product_subcategory.domain.usecase.AddSubCategoryUseCase
+import me.mrsajal.flashcart.features.product_subcategory.domain.usecase.DeleteSubCategoryUseCase
+import me.mrsajal.flashcart.features.product_subcategory.domain.usecase.GetSubCategoryUseCase
 import me.mrsajal.flashcart.features.products.data.ProductApiService
 import me.mrsajal.flashcart.features.products.data.ProductRepositoryImpl
 import me.mrsajal.flashcart.features.products.domain.repository.ProductRepository
@@ -82,6 +88,13 @@ private val categoryModule = module {
     factory { GetProductCategoryUseCase() }
     factory { DeleteCategoryUseCase() }
 }
+private val subCategoryModule = module {
+    factory { SubCategoryApiService() }
+    single<SubCategoryRepository> { SubCategoryRepositoryImpl(get(), get(), get()) }
+    factory { AddSubCategoryUseCase() }
+    factory { GetSubCategoryUseCase() }
+    factory { DeleteSubCategoryUseCase() }
+}
 
 private val utilityModule = module {
     factory { provideDispatcher() }
@@ -93,5 +106,6 @@ fun getSharedModules() = listOf(
     platformModule,
     productModule,
     reviewModule,
-    brandModule
+    brandModule,
+    categoryModule
 )
