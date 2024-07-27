@@ -44,6 +44,12 @@ import me.mrsajal.flashcart.features.products.domain.usecase.GetProductsBySubCat
 import me.mrsajal.flashcart.features.products.domain.usecase.SearchProductsUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.UpdateProductUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.UploadProductImageUseCase
+import me.mrsajal.flashcart.features.wishlist.data.WishlistApiService
+import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepository
+import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepositoryImpl
+import me.mrsajal.flashcart.features.wishlist.domain.usecases.AddItemsToWishlistUseCase
+import me.mrsajal.flashcart.features.wishlist.domain.usecases.GetWishListItemsUseCase
+import me.mrsajal.flashcart.features.wishlist.domain.usecases.RemoveItemsFromWishlistUseCase
 import org.koin.dsl.module
 
 private val authModule = module {
@@ -96,6 +102,14 @@ private val subCategoryModule = module {
     factory { DeleteSubCategoryUseCase() }
 }
 
+private val wishlistModule = module {
+    factory { WishlistApiService() }
+    single<WishlistRepository> { WishlistRepositoryImpl(get(), get(), get()) }
+    factory { AddItemsToWishlistUseCase() }
+    factory { RemoveItemsFromWishlistUseCase() }
+    factory { GetWishListItemsUseCase() }
+}
+
 private val utilityModule = module {
     factory { provideDispatcher() }
 }
@@ -107,5 +121,7 @@ fun getSharedModules() = listOf(
     productModule,
     reviewModule,
     brandModule,
-    categoryModule
+    categoryModule,
+    subCategoryModule,
+    wishlistModule
 )
