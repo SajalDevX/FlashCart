@@ -54,6 +54,12 @@ import me.mrsajal.flashcart.features.products.domain.usecase.GetProductsBySubCat
 import me.mrsajal.flashcart.features.products.domain.usecase.SearchProductsUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.UpdateProductUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.UploadProductImageUseCase
+import me.mrsajal.flashcart.features.profile.data.ProfileApiService
+import me.mrsajal.flashcart.features.profile.domain.repository.ProfileRepository
+import me.mrsajal.flashcart.features.profile.domain.repository.ProfileRepositoryImpl
+import me.mrsajal.flashcart.features.profile.domain.usecases.GetProfileUseCase
+import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateAddressUseCase
+import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateProfileUseCase
 import me.mrsajal.flashcart.features.wishlist.data.WishlistApiService
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepository
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepositoryImpl
@@ -132,6 +138,13 @@ private val orderModule = module {
 private val utilityModule = module {
     factory { provideDispatcher() }
 }
+private val profileModule = module {
+    factory { ProfileApiService() }
+    single<ProfileRepository> { ProfileRepositoryImpl(get(), get(), get()) }
+    factory { GetProfileUseCase() }
+    factory { UpdateProfileUseCase() }
+    factory { UpdateAddressUseCase() }
+}
 
 fun getSharedModules() = listOf(
     authModule,
@@ -143,5 +156,6 @@ fun getSharedModules() = listOf(
     categoryModule,
     subCategoryModule,
     wishlistModule,
-    orderModule
+    orderModule,
+    profileModule
 )
