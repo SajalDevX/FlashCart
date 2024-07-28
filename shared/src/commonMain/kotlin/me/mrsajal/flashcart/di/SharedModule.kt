@@ -12,6 +12,16 @@ import me.mrsajal.flashcart.features.brands.domain.repositpry.BrandRepository
 import me.mrsajal.flashcart.features.brands.domain.usecases.AddBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.DeleteBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.GetBrandsUseCase
+import me.mrsajal.flashcart.features.order.data.OrderApiService
+import me.mrsajal.flashcart.features.order.domain.repository.OrderRepository
+import me.mrsajal.flashcart.features.order.domain.repository.OrderRepositoryImpl
+import me.mrsajal.flashcart.features.order.domain.usecases.AddOrderUseCase
+import me.mrsajal.flashcart.features.order.domain.usecases.CancelOrderUseCase
+import me.mrsajal.flashcart.features.order.domain.usecases.ConfirmOrderUseCase
+import me.mrsajal.flashcart.features.order.domain.usecases.DeliverOrderUseCase
+import me.mrsajal.flashcart.features.order.domain.usecases.GetOrdersUseCase
+import me.mrsajal.flashcart.features.order.domain.usecases.PaymentUseCase
+import me.mrsajal.flashcart.features.order.domain.usecases.ReceiveOrderUseCase
 import me.mrsajal.flashcart.features.product_category.data.CategoryApiService
 import me.mrsajal.flashcart.features.product_category.domain.repository.CategoryRepository
 import me.mrsajal.flashcart.features.product_category.data.CategoryRepositoryImpl
@@ -101,7 +111,6 @@ private val subCategoryModule = module {
     factory { GetSubCategoryUseCase() }
     factory { DeleteSubCategoryUseCase() }
 }
-
 private val wishlistModule = module {
     factory { WishlistApiService() }
     single<WishlistRepository> { WishlistRepositoryImpl(get(), get(), get()) }
@@ -109,7 +118,17 @@ private val wishlistModule = module {
     factory { RemoveItemsFromWishlistUseCase() }
     factory { GetWishListItemsUseCase() }
 }
-
+private val orderModule = module {
+    factory { OrderApiService() }
+    single<OrderRepository> { OrderRepositoryImpl(get(), get(), get()) }
+    factory { AddOrderUseCase() }
+    factory { CancelOrderUseCase() }
+    factory { ConfirmOrderUseCase() }
+    factory { DeliverOrderUseCase() }
+    factory { GetOrdersUseCase() }
+    factory { PaymentUseCase() }
+    factory { ReceiveOrderUseCase() }
+}
 private val utilityModule = module {
     factory { provideDispatcher() }
 }
@@ -123,5 +142,6 @@ fun getSharedModules() = listOf(
     brandModule,
     categoryModule,
     subCategoryModule,
-    wishlistModule
+    wishlistModule,
+    orderModule
 )

@@ -62,7 +62,6 @@ internal class BrandApiService : KtorApi() {
             parameter("offset", offset)
             parameter("limit", limit)
             setToken(userToken)
-
         }
         return BrandApiResponse(
             code = httpResponse.status,
