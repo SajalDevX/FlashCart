@@ -60,6 +60,13 @@ import me.mrsajal.flashcart.features.profile.domain.repository.ProfileRepository
 import me.mrsajal.flashcart.features.profile.domain.usecases.GetProfileUseCase
 import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateAddressUseCase
 import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateProfileUseCase
+import me.mrsajal.flashcart.features.shipping.data.ShippingApiService
+import me.mrsajal.flashcart.features.shipping.domain.repository.ShippingRepository
+import me.mrsajal.flashcart.features.shipping.domain.repository.ShippingRepositoryImpl
+import me.mrsajal.flashcart.features.shipping.domain.usecases.AddShippingUseCase
+import me.mrsajal.flashcart.features.shipping.domain.usecases.DeleteShippingUseCase
+import me.mrsajal.flashcart.features.shipping.domain.usecases.GetShippingUseCase
+import me.mrsajal.flashcart.features.shipping.domain.usecases.UpdateShippingUseCase
 import me.mrsajal.flashcart.features.wishlist.data.WishlistApiService
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepository
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepositoryImpl
@@ -145,6 +152,14 @@ private val profileModule = module {
     factory { UpdateProfileUseCase() }
     factory { UpdateAddressUseCase() }
 }
+private val shippingModule = module {
+    factory { ShippingApiService() }
+    single<ShippingRepository> { ShippingRepositoryImpl(get(), get(), get()) }
+    factory { GetShippingUseCase() }
+    factory { AddShippingUseCase() }
+    factory { DeleteShippingUseCase() }
+    factory { UpdateShippingUseCase() }
+}
 
 fun getSharedModules() = listOf(
     authModule,
@@ -157,5 +172,6 @@ fun getSharedModules() = listOf(
     subCategoryModule,
     wishlistModule,
     orderModule,
-    profileModule
+    profileModule,
+    shippingModule
 )
