@@ -67,6 +67,20 @@ import me.mrsajal.flashcart.features.shipping.domain.usecases.AddShippingUseCase
 import me.mrsajal.flashcart.features.shipping.domain.usecases.DeleteShippingUseCase
 import me.mrsajal.flashcart.features.shipping.domain.usecases.GetShippingUseCase
 import me.mrsajal.flashcart.features.shipping.domain.usecases.UpdateShippingUseCase
+import me.mrsajal.flashcart.features.stocks.data.StockApiService
+import me.mrsajal.flashcart.features.stocks.domain.repository.StockRepository
+import me.mrsajal.flashcart.features.stocks.domain.repository.StockRepositoryImpl
+import me.mrsajal.flashcart.features.stocks.domain.usecases.AddStocksUseCase
+import me.mrsajal.flashcart.features.stocks.domain.usecases.GetStocksUseCase
+import me.mrsajal.flashcart.features.stocks.domain.usecases.ReduceStocksUseCase
+import me.mrsajal.flashcart.features.user_shop.data.ShopApiService
+import me.mrsajal.flashcart.features.user_shop.domain.repository.ShopRepository
+import me.mrsajal.flashcart.features.user_shop.domain.repository.ShopRepositoryImpl
+import me.mrsajal.flashcart.features.user_shop.domain.usecases.AddShopCategoryUseCase
+import me.mrsajal.flashcart.features.user_shop.domain.usecases.AddShopUseCase
+import me.mrsajal.flashcart.features.user_shop.domain.usecases.DeleteShopCategoryUseCase
+import me.mrsajal.flashcart.features.user_shop.domain.usecases.GetShopCategoryUseCase
+import me.mrsajal.flashcart.features.user_shop.domain.usecases.UpdateShopCategoryUseCase
 import me.mrsajal.flashcart.features.wishlist.data.WishlistApiService
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepository
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepositoryImpl
@@ -160,6 +174,22 @@ private val shippingModule = module {
     factory { DeleteShippingUseCase() }
     factory { UpdateShippingUseCase() }
 }
+private val stockModule = module {
+    factory { StockApiService() }
+    single<StockRepository> { StockRepositoryImpl(get(), get(), get()) }
+    factory { AddStocksUseCase() }
+    factory { GetStocksUseCase() }
+    factory { ReduceStocksUseCase() }
+}
+private val shopModule = module {
+    factory { ShopApiService() }
+    single<ShopRepository> { ShopRepositoryImpl(get(), get(), get()) }
+    factory { AddShopCategoryUseCase() }
+    factory { AddShopUseCase() }
+    factory { DeleteShopCategoryUseCase() }
+    factory { UpdateShopCategoryUseCase() }
+    factory { GetShopCategoryUseCase() }
+}
 
 fun getSharedModules() = listOf(
     authModule,
@@ -173,5 +203,7 @@ fun getSharedModules() = listOf(
     wishlistModule,
     orderModule,
     profileModule,
-    shippingModule
+    shippingModule,
+    stockModule,
+    shopModule
 )
