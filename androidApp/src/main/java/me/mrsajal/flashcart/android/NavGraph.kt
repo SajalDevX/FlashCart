@@ -29,6 +29,8 @@ import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
 import me.mrsajal.flashcart.android.presentation.home.HomeScreen
 import me.mrsajal.flashcart.android.presentation.home.HomeScreenViewModel
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
+import me.mrsajal.flashcart.android.presentation.wishlist.WishlistScreen
+import me.mrsajal.flashcart.android.presentation.wishlist.WishlistViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -47,7 +49,8 @@ fun NavGraph(
     val homeViewModel: HomeScreenViewModel = koinViewModel()
     val homeUiState = homeViewModel.homeUiState
 
-
+    val wishlistViewModel: WishlistViewModel = koinViewModel()
+    val wishListUiState = wishlistViewModel.uiState
     val bottomNavigationItems = remember {
         listOf(
             BottomNavigationItem(icon = R.drawable.homeicon, text = "Home"),
@@ -243,6 +246,13 @@ fun NavGraph(
                         fetchData = homeViewModel::fetchData,
                         homeRefreshState = homeViewModel.homeRefreshState,
                         onUiAction = homeViewModel::onUiAction
+                    )
+                }
+                composable(Routes.Wishlist.route) {
+                    WishlistScreen(
+                        uiState = wishListUiState,
+                        fetchData = wishlistViewModel::getWishListItems,
+                        event = wishlistViewModel::onUiAction
                     )
                 }
             }

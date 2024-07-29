@@ -3,6 +3,7 @@ package me.mrsajal.flashcart.android.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,12 +16,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,13 +35,16 @@ import coil.compose.AsyncImage
 import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.common.theming.AppTheme
 
+
 @Composable
 fun ProductHomeIcon(
     modifier: Modifier = Modifier,
     itemName: String,
     itemPrice: Double,
     itemImage: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isWishListItem: Boolean=false,
+    onHeartItemClick: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -51,15 +59,31 @@ fun ProductHomeIcon(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                model = itemImage,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(ratio = 1.5f)
+                    .aspectRatio(1.5f)
                     .weight(1f)
-            )
+            ) {
+                AsyncImage(
+                    model = itemImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxSize()
+                )
+                IconButton(
+                    onClick = onHeartItemClick,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.like_icon_filled),
+                        contentDescription = null,
+                        tint = if (isWishListItem) Color.Red else Color.LightGray
+                    )
+                }
+            }
             Column(
                 modifier = modifier
                     .background(
@@ -97,7 +121,7 @@ fun ProductHomeIcon(
                         Color(0xFF393F42)
                     },
                     modifier = modifier
-                        .padding(horizontal = 12.dp, 4.dp)
+                        .padding(horizontal = 12.dp, vertical = 4.dp)
                         .fillMaxWidth(),
                     fontWeight = FontWeight(800)
                 )
@@ -133,8 +157,10 @@ fun ProductHomeIconPreview() {
         ProductHomeIcon(
             itemName = "Gaming Mouse",
             itemPrice = 32.0,
-            itemImage = ""
-        ) {
-        }
+            itemImage = "",
+            isWishListItem = true,
+            onHeartItemClick = {},
+            onClick = {}
+        )
     }
 }

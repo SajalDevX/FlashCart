@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.features.wishlist.domain.repository
+package me.mrsajal.flashcart.features.wishlist.data
 
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.withContext
@@ -6,7 +6,7 @@ import me.mrsajal.flashcart.common.data.local.UserPreferences
 import me.mrsajal.flashcart.common.utils.DispatcherProvider
 import me.mrsajal.flashcart.common.utils.Result
 import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
-import me.mrsajal.flashcart.features.wishlist.data.WishlistApiService
+import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepository
 import okio.IOException
 
 internal class WishlistRepositoryImpl(

@@ -84,7 +84,7 @@ import me.mrsajal.flashcart.features.user_shop.domain.usecases.GetShopUseCase
 import me.mrsajal.flashcart.features.user_shop.domain.usecases.UpdateShopCategoryUseCase
 import me.mrsajal.flashcart.features.wishlist.data.WishlistApiService
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepository
-import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepositoryImpl
+import me.mrsajal.flashcart.features.wishlist.data.WishlistRepositoryImpl
 import me.mrsajal.flashcart.features.wishlist.domain.usecases.AddItemsToWishlistUseCase
 import me.mrsajal.flashcart.features.wishlist.domain.usecases.GetWishListItemsUseCase
 import me.mrsajal.flashcart.features.wishlist.domain.usecases.RemoveItemsFromWishlistUseCase
