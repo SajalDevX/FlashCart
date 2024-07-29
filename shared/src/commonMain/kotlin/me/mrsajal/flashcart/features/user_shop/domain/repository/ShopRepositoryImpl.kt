@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import me.mrsajal.flashcart.common.data.local.UserPreferences
 import me.mrsajal.flashcart.common.utils.DispatcherProvider
 import me.mrsajal.flashcart.common.utils.Result
+import me.mrsajal.flashcart.features.user_shop.data.RemoteShopEntity
 import me.mrsajal.flashcart.features.user_shop.data.ShopApiService
 import me.mrsajal.flashcart.features.user_shop.domain.model.RemoteShopCategoryEntity
 import okio.IOException
@@ -163,6 +164,37 @@ internal class ShopRepositoryImpl(
                     HttpStatusCode.OK -> {
                         Result.Success(
                             data = apiResponse.data.success
+                        )
+                    }
+
+                    HttpStatusCode.BadRequest -> {
+                        Result.Error(message = apiResponse.data.message)
+                    }
+
+                    else -> {
+                        Result.Error(message = apiResponse.data.message)
+                    }
+                }
+
+            } catch (ioException: IOException) {
+                Result.Error(message = "No Internet")
+            } catch (exception: Throwable) {
+                Result.Error(message = "${exception.message}")
+            }
+        }
+    }
+
+    override suspend fun getShop(): Result<RemoteShopEntity> {
+        return withContext(dispatcher.io) {
+            try {
+                val userData = userPreferences.getUserData()
+                val apiResponse = shopApiService.getShop(
+                    userToken = userData.token
+                )
+                when (apiResponse.code) {
+                    HttpStatusCode.OK -> {
+                        Result.Success(
+                            data = apiResponse.data.shop!!
                         )
                     }
 

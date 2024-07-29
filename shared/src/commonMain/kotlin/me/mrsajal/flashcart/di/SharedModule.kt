@@ -80,6 +80,7 @@ import me.mrsajal.flashcart.features.user_shop.domain.usecases.AddShopCategoryUs
 import me.mrsajal.flashcart.features.user_shop.domain.usecases.AddShopUseCase
 import me.mrsajal.flashcart.features.user_shop.domain.usecases.DeleteShopCategoryUseCase
 import me.mrsajal.flashcart.features.user_shop.domain.usecases.GetShopCategoryUseCase
+import me.mrsajal.flashcart.features.user_shop.domain.usecases.GetShopUseCase
 import me.mrsajal.flashcart.features.user_shop.domain.usecases.UpdateShopCategoryUseCase
 import me.mrsajal.flashcart.features.wishlist.data.WishlistApiService
 import me.mrsajal.flashcart.features.wishlist.domain.repository.WishlistRepository
@@ -189,6 +190,7 @@ private val shopModule = module {
     factory { DeleteShopCategoryUseCase() }
     factory { UpdateShopCategoryUseCase() }
     factory { GetShopCategoryUseCase() }
+    factory { GetShopUseCase() }
 }
 
 fun getSharedModules() = listOf(

@@ -91,5 +91,17 @@ internal class ShopApiService : KtorApi() {
             data = httpResponse.body()
         )
     }
+    suspend fun getShop(
+        userToken: String
+    ): ShopApiResponse {
+        val httpResponse = client.post {
+            endPoint("shop/get-shop")
+            setToken(userToken)
+        }
+        return ShopApiResponse(
+            code = httpResponse.status,
+            data = httpResponse.body()
+        )
+    }
 
 }

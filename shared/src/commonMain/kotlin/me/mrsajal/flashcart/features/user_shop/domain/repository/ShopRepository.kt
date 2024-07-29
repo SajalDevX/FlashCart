@@ -1,6 +1,7 @@
 package me.mrsajal.flashcart.features.user_shop.domain.repository
 
 import me.mrsajal.flashcart.common.utils.Result
+import me.mrsajal.flashcart.features.user_shop.data.RemoteShopEntity
 import me.mrsajal.flashcart.features.user_shop.domain.model.RemoteShopCategoryEntity
 
 
@@ -17,4 +18,5 @@ interface ShopRepository {
         shopName: String,
         shopCategoryId: String,
     ): Result<Boolean>
+    suspend fun getShop():Result<RemoteShopEntity>
 }
