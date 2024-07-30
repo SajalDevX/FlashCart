@@ -8,8 +8,8 @@ import me.mrsajal.flashcart.common.data.local.UserPreferences
 import me.mrsajal.flashcart.common.utils.DispatcherProvider
 import me.mrsajal.flashcart.common.utils.Result
 import me.mrsajal.flashcart.features.cart.data.CartApiService
+import me.mrsajal.flashcart.features.cart.domain.model.CartListData
 import me.mrsajal.flashcart.features.products.data.ProductApiService
-import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
 import okio.IOException
 
 internal class CartRepositoryImpl(
@@ -21,7 +21,7 @@ internal class CartRepositoryImpl(
     override suspend fun getCartItems(
         offset: Int,
         limit: Int
-    ): Result<Map<RemoteProductEntity, Int>> {
+    ): Result<List<CartListData>> {
         return withContext(dispatcher.io) {
             try {
                 val userData = userPreferences.getUserData()
@@ -39,7 +39,7 @@ internal class CartRepositoryImpl(
                                     productApiService.getProductById(userData.token, productId)
                                         .let { productApiResponse ->
                                             val remoteProductEntity = productApiResponse.data.product!!
-                                            remoteProductEntity to cartItems[productId]!!
+                                            CartListData(remoteProductEntity, cartItems[productId]!!)
                                         }
                                 } catch (e: Exception) {
                                     null
@@ -49,7 +49,6 @@ internal class CartRepositoryImpl(
 
                         val products = deferredProducts.awaitAll()
                             .filterNotNull()
-                            .toMap()
 
                         Result.Success(products)
                     }
