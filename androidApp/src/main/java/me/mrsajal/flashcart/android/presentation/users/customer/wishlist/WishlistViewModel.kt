@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.presentation.wishlist
+package me.mrsajal.flashcart.android.presentation.users.customer.wishlist
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

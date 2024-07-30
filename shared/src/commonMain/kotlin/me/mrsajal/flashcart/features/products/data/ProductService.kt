@@ -111,10 +111,6 @@ internal class ProductApiService : KtorApi() {
         )
     }
 
-    private val logger = Logger.withTag("ProductRepository").apply {
-        setMinSeverity(Severity.Debug)  // Change to desired severity level
-    }
-
     suspend fun getProductDetail(
         userToken: String,
         productId: String

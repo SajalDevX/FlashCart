@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.presentation.home
+package me.mrsajal.flashcart.android.presentation.users.customer.home
 
 import android.util.Log
 import androidx.compose.runtime.getValue

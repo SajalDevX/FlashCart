@@ -26,11 +26,11 @@ import me.mrsajal.flashcart.android.auth.signup.screens.UserDetailScreen
 import me.mrsajal.flashcart.android.common.util.routes.Routes
 import me.mrsajal.flashcart.android.presentation.components.BottomAppBar
 import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
-import me.mrsajal.flashcart.android.presentation.home.HomeScreen
-import me.mrsajal.flashcart.android.presentation.home.HomeScreenViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreen
+import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenViewModel
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
-import me.mrsajal.flashcart.android.presentation.wishlist.WishlistScreen
-import me.mrsajal.flashcart.android.presentation.wishlist.WishlistViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistScreen
+import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
