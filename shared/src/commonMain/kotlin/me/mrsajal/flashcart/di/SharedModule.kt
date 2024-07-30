@@ -12,6 +12,14 @@ import me.mrsajal.flashcart.features.brands.domain.repositpry.BrandRepository
 import me.mrsajal.flashcart.features.brands.domain.usecases.AddBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.DeleteBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.GetBrandsUseCase
+import me.mrsajal.flashcart.features.cart.data.CartApiService
+import me.mrsajal.flashcart.features.cart.domain.repository.CartRepository
+import me.mrsajal.flashcart.features.cart.domain.repository.CartRepositoryImpl
+import me.mrsajal.flashcart.features.cart.domain.usecases.AddItemToCartUseCase
+import me.mrsajal.flashcart.features.cart.domain.usecases.DeleteAllItemsFromCart
+import me.mrsajal.flashcart.features.cart.domain.usecases.DeleteItemQtyFromCartUseCase
+import me.mrsajal.flashcart.features.cart.domain.usecases.GetCartItemsUseCase
+import me.mrsajal.flashcart.features.cart.domain.usecases.IncreaseItemQtyInCartUseCase
 import me.mrsajal.flashcart.features.order.data.OrderApiService
 import me.mrsajal.flashcart.features.order.domain.repository.OrderRepository
 import me.mrsajal.flashcart.features.order.domain.repository.OrderRepositoryImpl
@@ -192,6 +200,15 @@ private val shopModule = module {
     factory { GetShopCategoryUseCase() }
     factory { GetShopUseCase() }
 }
+private val cartModule = module {
+    factory { CartApiService() }
+    single<CartRepository> { CartRepositoryImpl(get(), get(), get(),get()) }
+    factory { AddItemToCartUseCase() }
+    factory { IncreaseItemQtyInCartUseCase() }
+    factory { DeleteAllItemsFromCart() }
+    factory { DeleteItemQtyFromCartUseCase() }
+    factory { GetCartItemsUseCase() }
+}
 
 fun getSharedModules() = listOf(
     authModule,
@@ -207,5 +224,6 @@ fun getSharedModules() = listOf(
     profileModule,
     shippingModule,
     stockModule,
-    shopModule
+    shopModule,
+    cartModule
 )
