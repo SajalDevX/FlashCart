@@ -12,4 +12,5 @@ sealed class Routes (val route: String){
     data object Wishlist : Routes("Wishlist")
     data object History : Routes("History")
     data object Profile : Routes("Profile")
+    data object Cart : Routes("Cart")
 }

@@ -18,6 +18,7 @@ internal class CartRepositoryImpl(
     private val dispatcher: DispatcherProvider,
     private val userPreferences: UserPreferences,
 ) : CartRepository {
+
     override suspend fun getCartItems(
         offset: Int,
         limit: Int
@@ -29,19 +30,28 @@ internal class CartRepositoryImpl(
                     userToken = userData.token,
                     offset, limit
                 )
+                println("GetCartItems API Response: ${apiResponse.data.cart}")
+
                 when (apiResponse.code) {
                     HttpStatusCode.OK -> {
                         val cartItems = apiResponse.data.cart?.products ?: emptyMap()
+                        println("Cart Items Map: $cartItems")
 
                         val deferredProducts = cartItems.keys.map { productId ->
                             async {
                                 try {
-                                    productApiService.getProductById(userData.token, productId)
-                                        .let { productApiResponse ->
-                                            val remoteProductEntity = productApiResponse.data.product!!
-                                            CartListData(remoteProductEntity, cartItems[productId]!!)
-                                        }
+                                    val productApiResponse = productApiService.getProductDetail(userData.token, productId)
+                                    println("Fetched Product: ${productApiResponse.code}")
+
+                                    val remoteProductEntity = productApiResponse.data.product
+                                    if (remoteProductEntity != null) {
+                                        CartListData(remoteProductEntity, cartItems[productId]!!)
+                                    } else {
+                                        println("Product is null for ID: $productId")
+                                        null
+                                    }
                                 } catch (e: Exception) {
+                                    println("Error fetching product with ID $productId: ${e.message}")
                                     null
                                 }
                             }
@@ -49,25 +59,32 @@ internal class CartRepositoryImpl(
 
                         val products = deferredProducts.awaitAll()
                             .filterNotNull()
+                        println("Processed Products: $products")
 
                         Result.Success(products)
                     }
 
                     HttpStatusCode.BadRequest -> {
+                        println("Error: ${apiResponse.data.message}")
                         Result.Error(message = apiResponse.data.message)
                     }
 
                     else -> {
+                        println("Error: ${apiResponse.data.message}")
                         Result.Error(message = apiResponse.data.message)
                     }
                 }
             } catch (ioException: IOException) {
+                println("IOException: ${ioException.message}")
                 Result.Error(message = "No Internet")
             } catch (exception: Throwable) {
+                println("Exception: ${exception.message}")
                 Result.Error(message = "${exception.message}")
             }
         }
     }
+
+
 
     override suspend fun addToCart(productId: String, qty: Int): Result<Boolean> {
         return withContext(dispatcher.io) {

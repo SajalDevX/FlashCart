@@ -5,27 +5,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,11 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import me.mrsajal.flashcart.android.R
+import me.mrsajal.flashcart.android.common.util.formatWithCommas
 import me.mrsajal.flashcart.android.presentation.components.VerticalDivider
 import me.mrsajal.flashcart.features.cart.domain.model.CartListData
 import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
@@ -53,8 +38,13 @@ import java.time.format.DateTimeFormatter
 fun CartListItem(
     modifier: Modifier = Modifier,
     item: CartListData,
-    onQuantityChange: (Int) -> Unit,
-    isSelected: Boolean = true
+    quantity: Int,
+    isSelected: Boolean,
+    onIncreaseQty: () -> Unit,
+    onDecreaseQty: () -> Unit,
+    onCheckedChange: (Boolean) -> Unit,
+    onRemoveClick: () -> Unit,
+    onWishlistClick: () -> Unit
 ) {
     val currentDate = LocalDate.now()
     val deliveryDate = currentDate.plusDays(2)
@@ -73,7 +63,11 @@ fun CartListItem(
         ) {
             ProductImage(
                 imageUrl = item.product.images?.get(0) ?: "",
-                modifier = modifier.align(Alignment.Top)
+                isChecked = isSelected,
+                onCheckedChange = onCheckedChange,
+                onIncreaseQty = onIncreaseQty,
+                onDecreaseQty = onDecreaseQty,
+                quantity = quantity
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(
@@ -99,7 +93,6 @@ fun CartListItem(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Percentage off label and dropdown icon
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -123,7 +116,7 @@ fun CartListItem(
                         )
                     }
                     Text(
-                        text = "$" + item.product.price.toInt().toString(),
+                        text = "$" + item.product.price.toInt().formatWithCommas(),
                         fontSize = 16.sp,
                         fontWeight = FontWeight(600),
                         color = Color.Gray.copy(alpha = 0.7f),
@@ -131,7 +124,7 @@ fun CartListItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "$" + item.product.discountPrice?.toInt().toString(),
+                        text = "$" + (item.product.discountPrice?.toInt()?.formatWithCommas() ?: ""),
                         fontSize = 18.sp,
                         fontWeight = FontWeight(600)
                     )
@@ -143,9 +136,7 @@ fun CartListItem(
                     fontWeight = FontWeight(400),
                     color = Color.Blue.copy(alpha = 0.7f)
                 )
-
             }
-
         }
         Text(
             text = "Delivery expected by $formattedDate",
@@ -164,7 +155,7 @@ fun CartListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { /* Handle remove click */ },
+                onClick = onRemoveClick,
                 modifier = modifier
                     .border(1.dp, Color.Gray.copy(alpha = 0.2f))
                     .weight(1f)
@@ -185,7 +176,7 @@ fun CartListItem(
                 }
             }
             IconButton(
-                onClick = { /* Handle wishlist click */ },
+                onClick = onWishlistClick,
                 modifier = modifier
                     .border(1.dp, Color.Gray.copy(alpha = 0.2f))
                     .weight(1f)
@@ -208,11 +199,16 @@ fun CartListItem(
         }
     }
 }
+
 @Composable
 fun ProductImage(
     modifier: Modifier = Modifier,
-    isChecked: Boolean = true,
-    imageUrl: String
+    isChecked: Boolean,
+    imageUrl: String,
+    onCheckedChange: (Boolean) -> Unit,
+    onDecreaseQty: () -> Unit,
+    onIncreaseQty: () -> Unit,
+    quantity: Int
 ) {
     Box(
         modifier = modifier
@@ -241,7 +237,7 @@ fun ProductImage(
                 )
                 Checkbox(
                     checked = isChecked,
-                    onCheckedChange = {},
+                    onCheckedChange = onCheckedChange,
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(4.dp)
@@ -261,9 +257,8 @@ fun ProductImage(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = { /* Handle minus click */ },
-                    modifier = Modifier
-                        .size(12.dp)
+                    onClick = onDecreaseQty,
+                    modifier = Modifier.size(12.dp)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.minus),
@@ -272,10 +267,10 @@ fun ProductImage(
                     )
                 }
                 VerticalDivider()
-                Text(text = "1", style = MaterialTheme.typography.body1)
+                Text(text = quantity.toString(), style = MaterialTheme.typography.body1)
                 VerticalDivider()
                 IconButton(
-                    onClick = { /* Handle plus click */ },
+                    onClick = onIncreaseQty,
                     modifier = Modifier.size(16.dp)
                 ) {
                     Icon(
@@ -289,16 +284,21 @@ fun ProductImage(
     }
 }
 
-
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun ProductImagePreview() {
     ProductImage(
-        imageUrl = "https://picsum.photos/200/300"
+        imageUrl = "https://picsum.photos/200/300",
+        isChecked = true,
+        onCheckedChange = {},
+        onIncreaseQty = {},
+        onDecreaseQty = {},
+        quantity = 2
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun CartListItemPreview() {
@@ -310,7 +310,7 @@ fun CartListItemPreview() {
                 price = 5000.0,
                 productDetail = "Description",
                 categoryId = "Category",
-                images = listOf(""),
+                images = listOf("https://picsum.photos/200/300"),
                 ratingId = listOf(""),
                 discountPrice = 4000.0,
                 productQuantity = 3,
@@ -324,7 +324,12 @@ fun CartListItemPreview() {
             ),
             qty = 2
         ),
-        onQuantityChange = {},
-        isSelected = true
+        quantity = 2,
+        isSelected = true,
+        onIncreaseQty = {},
+        onDecreaseQty = {},
+        onCheckedChange = {},
+        onRemoveClick = {},
+        onWishlistClick = {}
     )
 }

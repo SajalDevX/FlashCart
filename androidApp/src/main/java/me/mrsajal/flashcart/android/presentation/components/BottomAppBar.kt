@@ -2,6 +2,7 @@ package me.mrsajal.flashcart.android.presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +20,6 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.mrsajal.flashcart.android.R
@@ -32,11 +32,11 @@ fun BottomAppBar(
     selectedItem: Int,
     onItemClick: (Int) -> Unit
 ) {
-
     BottomNavigation(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp), // Adjusted height for better vertical centering
+            .border(1.dp,Color.Gray.copy(0.2f))
+            .height(56.dp),
         backgroundColor = MaterialTheme.colors.background,
         elevation = 10.dp
     ) {

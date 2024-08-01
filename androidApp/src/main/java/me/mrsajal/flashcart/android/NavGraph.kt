@@ -1,6 +1,8 @@
 package me.mrsajal.flashcart.android
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,11 +31,14 @@ import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
 import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenViewModel
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
+import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartScreen
+import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NavGraph(
@@ -51,11 +56,16 @@ fun NavGraph(
 
     val wishlistViewModel: WishlistViewModel = koinViewModel()
     val wishListUiState = wishlistViewModel.uiState
+
+    val cartViewModel: CartViewModel = koinViewModel()
+    val cartUiState = cartViewModel.uiState
+
+
     val bottomNavigationItems = remember {
         listOf(
             BottomNavigationItem(icon = R.drawable.homeicon, text = "Home"),
             BottomNavigationItem(icon = R.drawable.hearticon, text = "Wishlist"),
-            BottomNavigationItem(icon = R.drawable.papericon, text = "History"),
+            BottomNavigationItem(icon = R.drawable.papericon, text = "Cart"),
             BottomNavigationItem(icon = R.drawable.profileicon, text = "Profile"),
         )
     }
@@ -67,14 +77,14 @@ fun NavGraph(
     selectedItem = when (backStackState?.destination?.route) {
         Routes.Home.route -> 0
         Routes.Wishlist.route -> 1
-        Routes.History.route -> 2
+        Routes.Cart.route -> 2
         Routes.Profile.route -> 3
         else -> 0
     }
     val isBottomBarVisible = remember(key1 = backStackState) {
         backStackState?.destination?.route == Routes.Home.route ||
                 backStackState?.destination?.route == Routes.Wishlist.route ||
-                backStackState?.destination?.route == Routes.History.route ||
+                backStackState?.destination?.route == Routes.Cart.route ||
                 backStackState?.destination?.route == Routes.Profile.route
     }
 
@@ -98,7 +108,7 @@ fun NavGraph(
 
                         2 -> navigateToTab(
                             navController = navController,
-                            route = Routes.History.route
+                            route = Routes.Cart.route
                         )
 
                         3 -> navigateToTab(
@@ -253,6 +263,15 @@ fun NavGraph(
                         uiState = wishListUiState,
                         fetchData = wishlistViewModel::getWishListItems,
                         event = wishlistViewModel::onUiAction
+                    )
+                }
+                composable(Routes.Cart.route) {
+                    CartScreen(
+                        cartUiState = cartUiState,
+                        fetchData = cartViewModel::getCartItems,
+                        cartUiAction = cartViewModel::handleAction,
+                        navigateToProduct = {
+                        }
                     )
                 }
             }

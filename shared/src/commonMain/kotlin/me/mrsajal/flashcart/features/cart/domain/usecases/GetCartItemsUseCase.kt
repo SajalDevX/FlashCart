@@ -13,6 +13,11 @@ class GetCartItemsUseCase : KoinComponent {
         offset:Int,
         limit:Int
     ): Result<List<CartListData>>{
-        return repository.getCartItems( offset, limit)
+
+        val result = repository.getCartItems(offset, limit)
+        println("GetCartItemsUseCase invoked with: limit=$limit, offset=$offset, items: ${result.data}")
+
+        return result
+
     }
 }
