@@ -27,6 +27,7 @@ import coil.compose.AsyncImage
 import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.common.util.formatWithCommas
 import me.mrsajal.flashcart.android.presentation.components.VerticalDivider
+import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartUiAction
 import me.mrsajal.flashcart.features.cart.domain.model.CartListData
 import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
 import java.time.LocalDate
@@ -44,7 +45,7 @@ fun CartListItem(
     onDecreaseQty: () -> Unit,
     onCheckedChange: (Boolean) -> Unit,
     onRemoveClick: () -> Unit,
-    onWishlistClick: () -> Unit
+    onWishlistClick: () -> Unit,
 ) {
     val currentDate = LocalDate.now()
     val deliveryDate = currentDate.plusDays(2)
@@ -190,7 +191,7 @@ fun CartListItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        "Wishlist",
+                        "Buy later",
                         style = MaterialTheme.typography.body1,
                         color = Color.Gray
                     )

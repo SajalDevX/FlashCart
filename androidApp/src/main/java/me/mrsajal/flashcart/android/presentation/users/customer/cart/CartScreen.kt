@@ -271,7 +271,7 @@ fun CartScreen(
                                         )
                                     )
                                 },
-                                onWishlistClick = { /* TODO: Implement wishlist logic */ }
+                                onWishlistClick = { cartUiAction(CartUiAction.AddToWishlist(item.product.productId)) }
                             )
                             Spacer(
                                 modifier = modifier

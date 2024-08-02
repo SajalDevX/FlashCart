@@ -114,8 +114,10 @@ class CartViewModel(
                         }
 
                         val newSelectedItems = uiState.selectedItems
-                        val selectedTotalPrice = calculateSelectedTotalPrice(updatedItems, newSelectedItems)
-                        val selectedDiscountedPrice = calculateSelectedDiscountedPrice(updatedItems, newSelectedItems)
+                        val selectedTotalPrice =
+                            calculateSelectedTotalPrice(updatedItems, newSelectedItems)
+                        val selectedDiscountedPrice =
+                            calculateSelectedDiscountedPrice(updatedItems, newSelectedItems)
 
                         uiState = uiState.copy(
                             cartItems = updatedItems,
@@ -160,8 +162,10 @@ class CartViewModel(
                         }.filterNotNull()
 
                         val newSelectedItems = uiState.selectedItems
-                        val selectedTotalPrice = calculateSelectedTotalPrice(updatedItems, newSelectedItems)
-                        val selectedDiscountedPrice = calculateSelectedDiscountedPrice(updatedItems, newSelectedItems)
+                        val selectedTotalPrice =
+                            calculateSelectedTotalPrice(updatedItems, newSelectedItems)
+                        val selectedDiscountedPrice =
+                            calculateSelectedDiscountedPrice(updatedItems, newSelectedItems)
 
                         uiState = uiState.copy(
                             cartItems = updatedItems,
@@ -188,8 +192,10 @@ class CartViewModel(
             } else {
                 emptySet()
             }
-            val selectedTotalPrice = calculateSelectedTotalPrice(uiState.cartItems, newSelectedItems)
-            val selectedDiscountedPrice = calculateSelectedDiscountedPrice(uiState.cartItems, newSelectedItems)
+            val selectedTotalPrice =
+                calculateSelectedTotalPrice(uiState.cartItems, newSelectedItems)
+            val selectedDiscountedPrice =
+                calculateSelectedDiscountedPrice(uiState.cartItems, newSelectedItems)
             uiState = uiState.copy(
                 selectedItems = newSelectedItems,
                 selectAll = selectAll,
@@ -204,8 +210,10 @@ class CartViewModel(
             val newSelectedItems = uiState.selectedItems.toMutableSet().apply {
                 if (isSelected) add(id) else remove(id)
             }
-            val selectedTotalPrice = calculateSelectedTotalPrice(uiState.cartItems, newSelectedItems)
-            val selectedDiscountedPrice = calculateSelectedDiscountedPrice(uiState.cartItems, newSelectedItems)
+            val selectedTotalPrice =
+                calculateSelectedTotalPrice(uiState.cartItems, newSelectedItems)
+            val selectedDiscountedPrice =
+                calculateSelectedDiscountedPrice(uiState.cartItems, newSelectedItems)
             uiState = uiState.copy(
                 selectedItems = newSelectedItems,
                 selectedTotalPrice = selectedTotalPrice,
@@ -214,12 +222,18 @@ class CartViewModel(
         }
     }
 
-    private fun calculateSelectedTotalPrice(cartItems: List<CartListData>, selectedItems: Set<String>): Int {
+    private fun calculateSelectedTotalPrice(
+        cartItems: List<CartListData>,
+        selectedItems: Set<String>
+    ): Int {
         return cartItems.filter { it.product.productId in selectedItems }
             .sumOf { it.product.price.toInt() * it.qty }
     }
 
-    private fun calculateSelectedDiscountedPrice(cartItems: List<CartListData>, selectedItems: Set<String>): Int {
+    private fun calculateSelectedDiscountedPrice(
+        cartItems: List<CartListData>,
+        selectedItems: Set<String>
+    ): Int {
         return cartItems.filter { it.product.productId in selectedItems }
             .sumOf { it.product.discountPrice!!.toInt() * it.qty }
     }
@@ -253,17 +267,43 @@ class CartViewModel(
         uiState = uiState.copy(selectedAddress = address)
     }
 
+    fun addToWishlist(productId: String) {
+        viewModelScope.launch {
+            try {
+                uiState = uiState.copy(isLoading = true)
+                val result = wishlistUseCase(productId)
+                when (result) {
+                    is Result.Error -> {
+                        uiState = uiState.copy(
+                            error = result.message,
+                            isLoading = false
+                        )
+                    }
+
+                    is Result.Success -> {
+                        Log.d("CartViewModel", "Item added to wishlist: $productId")
+//                        removeItemFromCart(productId)
+                    }
+                }
+            } catch (e: Exception) {
+                uiState = uiState.copy(error = e.message, isLoading = false)
+            }
+        }
+    }
+
+
     fun handleAction(action: CartUiAction) {
         when (action) {
             is CartUiAction.FetchCartItems -> getCartItems()
             is CartUiAction.IncreaseItemCount -> increaseItemQtyInCart(action.id)
             is CartUiAction.ReduceItemCount -> decreaseItemQtyInCart(action.id)
-            is CartUiAction.RemoveItem -> CartUiAction.RemoveItem(action.id)
-            is CartUiAction.Checkout -> CartUiAction.Checkout(action.items, action.totalPrice)
+            is CartUiAction.RemoveItem -> {}
+            is CartUiAction.Checkout -> {} // Handle Checkout action as needed
             is CartUiAction.SelectItem -> selectItem(action.id, action.isSelected)
             is CartUiAction.SelectAddress -> selectAddress(action.address)
             is CartUiAction.ToggleSelectAll -> toggleSelectAll()
             is CartUiAction.DeleteAllItems -> removeAllItemsFromCart()
+            is CartUiAction.AddToWishlist -> addToWishlist(action.id)
         }
     }
 }
@@ -296,6 +336,7 @@ sealed class CartUiAction {
     data class ReduceItemCount(val id: String) : CartUiAction()
     data class IncreaseItemCount(val id: String) : CartUiAction()
     data class RemoveItem(val id: String) : CartUiAction()
+    data class AddToWishlist(val id: String) : CartUiAction()
     data class Checkout(val items: List<CartListData>, val totalPrice: Float) : CartUiAction()
     data class SelectItem(val id: String, val isSelected: Boolean) : CartUiAction()
     data class SelectAddress(val address: UserAddress) : CartUiAction()
