@@ -10,6 +10,9 @@ class GetProfileUseCase : KoinComponent {
     private val repository by inject<ProfileRepository>()
 
     suspend operator fun invoke(): Result<UserEntity> {
-        return repository.getProfile()
+        val result = repository.getProfile()
+        println("Profile fetched: ${result.data}")
+
+        return result
     }
 }

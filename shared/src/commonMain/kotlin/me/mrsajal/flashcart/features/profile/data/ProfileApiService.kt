@@ -1,5 +1,6 @@
 package me.mrsajal.flashcart.features.profile.data
 
+import co.touchlab.kermit.Logger
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.put
@@ -15,10 +16,15 @@ internal class ProfileApiService : KtorApi() {
     suspend fun getProfile(
         userToken: String
     ): ProfileApiResponse {
-        val httpResponse = client.get{
+        val logger = Logger.withTag("ProfileApi")
+
+        logger.i { "Fetching profile with token: $userToken" }
+        val httpResponse = client.get {
             endPoint("profile")
             setToken(userToken)
         }
+        logger.i { "Profile fetched with status: ${httpResponse.status}" }
+
         return ProfileApiResponse(
             data = httpResponse.body(),
             code = httpResponse.status

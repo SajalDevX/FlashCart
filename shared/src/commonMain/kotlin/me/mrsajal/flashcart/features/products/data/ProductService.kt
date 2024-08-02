@@ -1,8 +1,5 @@
 package me.mrsajal.flashcart.features.products.data
 
-import co.touchlab.kermit.Logger
-import co.touchlab.kermit.Logger.Companion.setMinSeverity
-import co.touchlab.kermit.Severity
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
@@ -16,7 +13,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
 import me.mrsajal.flashcart.common.data.remote.KtorApi
 import me.mrsajal.flashcart.features.products.domain.model.ProductApiResponse
 

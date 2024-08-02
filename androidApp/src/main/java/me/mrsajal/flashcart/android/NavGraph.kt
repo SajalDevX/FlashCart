@@ -270,6 +270,7 @@ fun NavGraph(
                         cartUiState = cartUiState,
                         fetchData = cartViewModel::getCartItems,
                         cartUiAction = cartViewModel::handleAction,
+                        fetchAddress = cartViewModel::getAddressData,
                         navigateToProduct = {
                         }
                     )

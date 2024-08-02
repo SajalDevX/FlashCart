@@ -43,14 +43,14 @@ fun BottomAppBar(
         items.forEachIndexed { index, item ->
             BottomNavigationItem(
                 selected = index == selectedItem,
-                onClick = { onItemClick(index) }, // Fixed onClick action
+                onClick = { onItemClick(index) },
                 selectedContentColor = Color(0xFF67C4A7),
                 unselectedContentColor = Color(0xFF4E4B66),
                 icon = {
                     Column(
                         horizontalAlignment = CenterHorizontally,
-                        verticalArrangement = Arrangement.Center, // Center items vertically
-                        modifier = Modifier.height(56.dp) // Adjust height for vertical centering
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.height(56.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = item.icon),

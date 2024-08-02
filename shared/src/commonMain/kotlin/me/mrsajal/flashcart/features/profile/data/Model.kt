@@ -8,7 +8,7 @@ data class UserEntity(
     val name: String ,
     val email: String ,
     val password: String ,
-    val imageUrl: String ,
+    val imageUrl: String?=null,
     val userDetails: UserDetails,
 )
 
@@ -52,5 +52,3 @@ data class UpdateUserAddressRequest(
     val road: String,
     val state: String,
 )
-
-

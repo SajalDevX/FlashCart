@@ -64,7 +64,7 @@ import me.mrsajal.flashcart.features.products.domain.usecase.UpdateProductUseCas
 import me.mrsajal.flashcart.features.products.domain.usecase.UploadProductImageUseCase
 import me.mrsajal.flashcart.features.profile.data.ProfileApiService
 import me.mrsajal.flashcart.features.profile.domain.repository.ProfileRepository
-import me.mrsajal.flashcart.features.profile.domain.repository.ProfileRepositoryImpl
+import me.mrsajal.flashcart.features.profile.data.ProfileRepositoryImpl
 import me.mrsajal.flashcart.features.profile.domain.usecases.GetProfileUseCase
 import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateAddressUseCase
 import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateProfileUseCase
