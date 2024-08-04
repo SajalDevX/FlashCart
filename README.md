@@ -1,6 +1,6 @@
 # FlashCart App - Kotlin Multiplatform Client (Work in Progress) 🚧
 
-This repository contains the client-side code for the E-Commerce App built using Kotlin Multiplatform.
+This repository contains the client-side code for the E-Commerce production App built using Kotlin Multiplatform.
 
 ## Status 📱
 
@@ -28,7 +28,7 @@ This repository contains the client-side code for the E-Commerce App built using
 
 ## Usage ℹ️
 
-The Android UI allows users to interact with the Social Media App. Further functionality for iOS will be added in the future.
+The Android UI allows users to interact with the E-commerce App. Further functionality for iOS will be added in the future.
 
 ## Contributing 🤝
 
