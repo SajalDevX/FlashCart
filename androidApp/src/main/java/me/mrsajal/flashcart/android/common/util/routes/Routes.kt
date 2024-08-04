@@ -8,9 +8,17 @@ sealed class Routes (val route: String){
     data object SignUpPassword: Routes("SignUpPassword")
     data object LoginEmail: Routes("LoginEmail")
     data object LoginPassword: Routes("LoginPassword")
+
     data object Home : Routes("Home")
     data object Wishlist : Routes("Wishlist")
-    data object History : Routes("History")
+    data object ProductDetailScreen : Routes("ProductDetailScreen")
     data object Profile : Routes("Profile")
     data object Cart : Routes("Cart")
+
+
+    data object AdminHome : Routes("AdminHome")
+
+    data object SellerHome : Routes("SellerHome")
+
+    data object SuperAdminHome : Routes("SuperAdminHome")
 }

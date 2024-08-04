@@ -13,10 +13,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import me.mrsajal.flashcart.android.auth.login.LoginEmailScreen
 import me.mrsajal.flashcart.android.auth.login.LoginPasswordScreen
 import me.mrsajal.flashcart.android.auth.login.LoginViewModel
@@ -33,6 +35,7 @@ import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenV
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetailScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -121,11 +124,15 @@ fun NavGraph(
         }
     }) {
         if (uiState is MainActivityUiState.Success) {
-            val startDestination = if (uiState.currentUser.token.isNotEmpty()) {
-                Routes.Home.route
-            } else {
-                Routes.Onboarding.route
+            val startDestination = when {
+                uiState.currentUser.token.isNotEmpty() && uiState.currentUser.userRole == "customer" -> Routes.Home.route
+                uiState.currentUser.token.isNotEmpty() && uiState.currentUser.userRole == "seller" -> Routes.SellerHome.route
+                uiState.currentUser.token.isNotEmpty() && uiState.currentUser.userRole == "admin" -> Routes.AdminHome.route
+                uiState.currentUser.token.isNotEmpty() && uiState.currentUser.userRole == "super_admin" -> Routes.SuperAdminHome.route
+
+                else -> Routes.Onboarding.route
             }
+
             NavHost(
                 navController = navController,
                 startDestination = startDestination
@@ -273,6 +280,13 @@ fun NavGraph(
                         fetchAddress = cartViewModel::getAddressData,
                         navigateToProduct = {
                         }
+                    )
+                }
+                composable(
+                    route = Routes.ProductDetailScreen.route + "/{productId}",
+                    arguments = listOf(navArgument("productId") { type = NavType.StringType })
+                ) {
+                    ProductDetailScreen(
                     )
                 }
             }
