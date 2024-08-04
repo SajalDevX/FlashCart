@@ -1,6 +1,7 @@
 package me.mrsajal.flashcart.android.presentation.users.customer.home
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,11 +17,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import me.mrsajal.flashcart.android.common.util.routes.Routes
 import me.mrsajal.flashcart.android.presentation.components.ProductHomeIcon
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
+    navController: NavController,
     onUiAction: (HomeUiAction) -> Unit,
     modifier: Modifier = Modifier,
     homeUiState: HomeUiState,
@@ -34,9 +38,11 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         fetchData()
     }
-    Box(modifier = modifier
-        .fillMaxSize()
-        .pullRefresh(state = pullRefreshState)) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pullRefresh(state = pullRefreshState)
+    ) {
         LazyVerticalGrid(
             modifier = Modifier
                 .padding(14.dp),
@@ -44,7 +50,9 @@ fun HomeScreen(
         ) {
             items(homeUiState.products) { product ->
                 ProductHomeIcon(
-                    modifier = modifier.padding(2.dp),
+                    modifier = modifier
+                        .padding(2.dp)
+                        .clickable { navController.navigate(Routes.ProductDetailScreen.route + "/${product.productId}") },
                     itemName = product.productName,
                     itemPrice = product.price,
                     itemImage = product.images?.getOrNull(0) ?: "",

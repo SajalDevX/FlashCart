@@ -35,6 +35,7 @@ import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenV
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetail
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetailScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistViewModel
@@ -262,6 +263,7 @@ fun NavGraph(
                         homeUiState = homeUiState,
                         fetchData = homeViewModel::fetchData,
                         homeRefreshState = homeViewModel.homeRefreshState,
+                        navController = navController,
                         onUiAction = homeViewModel::onUiAction
                     )
                 }
@@ -286,7 +288,7 @@ fun NavGraph(
                     route = Routes.ProductDetailScreen.route + "/{productId}",
                     arguments = listOf(navArgument("productId") { type = NavType.StringType })
                 ) {
-                    ProductDetailScreen(
+                    ProductDetail(
                     )
                 }
             }

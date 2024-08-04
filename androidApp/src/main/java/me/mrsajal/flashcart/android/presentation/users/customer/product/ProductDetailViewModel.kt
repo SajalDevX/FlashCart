@@ -28,43 +28,40 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     var uiState by mutableStateOf(ProductDetailUiState())
         private set
-    var currentId: String? = null
-        private set
-    var brandId: String? = null
-        private set
-    var subCategoryId: String? = null
-        private set
+    private var currentId: String? = null
+    private var brandId: String? = null
+    private var subCategoryId: String? = null
 
     init {
         savedStateHandle.get<String>("productId")?.let { productId ->
             if (productId.isNotEmpty()) {
                 currentId = productId
                 fetchProductData(productId)
-                checkIfItemInCart(productId)
+//                checkIfItemInCart(productId)
             }
         }
     }
 
-    private fun checkIfItemInCart(id: String) {
-        viewModelScope.launch {
-            val limit = 20
-            var offset = 0
-            var found = false
-
-            while (true) {
-                val cartItems = getCartItemsUseCase(limit, offset)
-                if (cartItems.data?.isEmpty() == true) break
-
-                if (cartItems.data?.any { it.product.productId == id } == true) {
-                    found = true
-                    break
-                }
-
-                offset += limit
-            }
-            uiState = uiState.copy(isItemInCart = found)
-        }
-    }
+//    private fun checkIfItemInCart(id: String) {
+//        viewModelScope.launch {
+//            val limit = 20
+//            var offset = 0
+//            var found = false
+//
+//            while (true) {
+//                val cartItems = getCartItemsUseCase(limit, offset)
+//                if (cartItems.data?.isEmpty() == true) break
+//
+//                if (cartItems.data?.any { it.product.productId == id } == true) {
+//                    found = true
+//                    break
+//                }
+//
+//                offset += limit
+//            }
+//            uiState = uiState.copy(isItemInCart = found)
+//        }
+//    }
 
     private fun fetchProductData(id: String) {
         uiState = uiState.copy(isLoading = true)
@@ -149,12 +146,18 @@ class ProductDetailViewModel(
             is ProductDetailEvent.AddToCart -> addToCart(action.qty)
             is ProductDetailEvent.AddToWishlist -> {}
             is ProductDetailEvent.BuyNow -> addToWishList()
+            ProductDetailEvent.FetchData -> {
+                fetchProductData(currentId!!)
+//                getSubCategoryProducts()
+//                getSimilarBrandItems()
+            }
         }
     }
 
 }
 
 sealed class ProductDetailEvent {
+    data object FetchData : ProductDetailEvent()
     data class AddToCart(val qty: Int) : ProductDetailEvent()
     data class BuyNow(val qty: Int) : ProductDetailEvent()
     data class AddToWishlist(val productId: String) : ProductDetailEvent()
