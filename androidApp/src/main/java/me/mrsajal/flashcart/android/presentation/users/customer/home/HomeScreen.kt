@@ -13,7 +13,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,15 +28,11 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     homeUiState: HomeUiState,
     homeRefreshState: HomeRefreshState,
-    fetchData: () -> Unit
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = homeRefreshState.isRefreshing,
         onRefresh = { onUiAction(HomeUiAction.RefreshAction) },
     )
-    LaunchedEffect(Unit) {
-        fetchData()
-    }
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -48,11 +43,11 @@ fun HomeScreen(
                 .padding(14.dp),
             columns = GridCells.Fixed(2)
         ) {
-            items(homeUiState.products) { product ->
+            items(homeUiState.products, key = {product->product.productId}) { product ->
                 ProductHomeIcon(
                     modifier = modifier
                         .padding(2.dp)
-                        .clickable { navController.navigate(Routes.ProductDetailScreen.route + "/${product.productId}") },
+                        .clickable { navController.navigate(Routes.ProductDetailScreen.route + "?productId=${product.productId}") },
                     itemName = product.productName,
                     itemPrice = product.price,
                     itemImage = product.images?.getOrNull(0) ?: "",

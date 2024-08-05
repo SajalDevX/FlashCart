@@ -7,47 +7,119 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import me.mrsajal.flashcart.android.common.theming.Blue
+import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductImagePager(
     modifier: Modifier = Modifier,
-    images: List<String>
+    images: List<String>,
+    product: RemoteProductEntity? = null
 ) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { images.size })
 
-    Box(
+    Column(
         modifier = modifier
-            .aspectRatio(1.2f)
+            .fillMaxWidth()
+            .padding(vertical = 32.dp)
+            .height(350.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { page ->
-            AsyncImage(
-                model = images[page],
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+        Box(modifier = Modifier.weight(1f)) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                if (page != 1) {
+                    AsyncImage(
+                        model = images[page],
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Fit
+                    )
+                } else {
+                    ProductHighlights(product = product!!, image = images[page])
+                }
+            }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         PageIndicator(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp),
+            modifier = Modifier.padding(vertical = 8.dp),
             pageSize = images.size,
             selectedPage = pagerState.currentPage
+        )
+    }
+}
+@Composable
+fun ProductHighlights(
+    modifier: Modifier = Modifier,
+    product: RemoteProductEntity,
+    image: String
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .aspectRatio(1.5f)
+    ) {
+        AsyncImage(
+            model = image,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(Color.Black.copy(0.8f), Color.White.copy(0.5f))
+                    )
+                )
+        )
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Key Highlights",
+                style = MaterialTheme.typography.h6,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            KeyHighlight("Brand", "")
+            KeyHighlight("Size", "")
+            KeyHighlight("Interface", "")
+        }
+    }
+}
+
+@Composable
+fun KeyHighlight(key: String, value: String) {
+    Column(modifier = Modifier.padding(vertical = 2.dp)) {
+        Text(
+            text = key,
+            style = MaterialTheme.typography.caption,
+            color = Color.LightGray
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.body1,
+            color = Color.White
         )
     }
 }
@@ -58,7 +130,7 @@ fun PageIndicator(
     pageSize: Int,
     selectedPage: Int,
     selectedColor: Color = MaterialTheme.colors.primary,
-    unselectedColor: Color = Blue
+    unselectedColor: Color = Color.DarkGray.copy(0.5f)
 ) {
     Row(
         modifier = modifier,
@@ -77,18 +149,4 @@ fun PageIndicator(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProductImagePagerPreview() {
-    val sampleImages = listOf(
-        "https://example.com/image1.jpg",
-        "https://example.com/image2.jpg",
-        "https://example.com/image3.jpg"
-    )
-
-    ProductImagePager(
-        images = sampleImages
-    )
 }

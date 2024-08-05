@@ -20,8 +20,11 @@ class HomeScreenViewModel(
     var homeRefreshState by mutableStateOf(HomeRefreshState())
         private set
 
+    init {
+        fetchData()
+    }
 
-    fun fetchData() {
+    private fun fetchData() {
         homeRefreshState = homeRefreshState.copy(isRefreshing = true)
         viewModelScope.launch {
 

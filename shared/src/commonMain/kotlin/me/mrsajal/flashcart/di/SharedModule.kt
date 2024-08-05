@@ -56,6 +56,7 @@ import me.mrsajal.flashcart.features.products.domain.usecase.AddProductUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.DeleteProductUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.GetAllProductsUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.GetProductByIdUseCase
+import me.mrsajal.flashcart.features.products.domain.usecase.GetProductDetailsUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.GetProductsByBrand
 import me.mrsajal.flashcart.features.products.domain.usecase.GetProductsByCategory
 import me.mrsajal.flashcart.features.products.domain.usecase.GetProductsBySubCategory
@@ -117,6 +118,7 @@ private val productModule = module {
     factory { GetProductsBySubCategory() }
     factory { GetProductsByBrand() }
     factory { SearchProductsUseCase() }
+    factory { GetProductDetailsUseCase() }
 }
 private val reviewModule = module {
     factory { ReviewApiService() }

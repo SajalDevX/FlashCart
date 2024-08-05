@@ -1,81 +1,63 @@
 package me.mrsajal.flashcart.android.presentation.users.customer.product
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.mrsajal.flashcart.common.utils.Result
 import me.mrsajal.flashcart.features.cart.domain.usecases.AddItemToCartUseCase
 import me.mrsajal.flashcart.features.cart.domain.usecases.GetCartItemsUseCase
 import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
-import me.mrsajal.flashcart.features.products.domain.usecase.GetProductByIdUseCase
+import me.mrsajal.flashcart.features.products.domain.usecase.GetProductDetailsUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.GetProductsByBrand
 import me.mrsajal.flashcart.features.products.domain.usecase.GetProductsBySubCategory
 import me.mrsajal.flashcart.features.wishlist.domain.usecases.AddItemsToWishlistUseCase
 
-
 class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val fetchProductDataUseCase: GetProductByIdUseCase,
+    private val fetchProductDataUseCase: GetProductDetailsUseCase,
     private val getFeedProducts: GetProductsBySubCategory,
     private val getProductsByBrand: GetProductsByBrand,
     private val addItemsToCart: AddItemToCartUseCase,
     private val addItemsToWishlistUseCase: AddItemsToWishlistUseCase,
     private val getCartItemsUseCase: GetCartItemsUseCase
 ) : ViewModel() {
-    var uiState by mutableStateOf(ProductDetailUiState())
-        private set
+
+    private val _uiState = MutableStateFlow(ProductDetailUiState())
+    val uiState: StateFlow<ProductDetailUiState> = _uiState
+
     private var currentId: String? = null
     private var brandId: String? = null
     private var subCategoryId: String? = null
 
     init {
         savedStateHandle.get<String>("productId")?.let { productId ->
+            Log.d("ProductDetailViewModel", "Item Id: $productId")
             if (productId.isNotEmpty()) {
                 currentId = productId
+                Log.d("ProductDetailViewModel", "Item currentId: $currentId")
                 fetchProductData(productId)
-//                checkIfItemInCart(productId)
             }
         }
     }
 
-//    private fun checkIfItemInCart(id: String) {
-//        viewModelScope.launch {
-//            val limit = 20
-//            var offset = 0
-//            var found = false
-//
-//            while (true) {
-//                val cartItems = getCartItemsUseCase(limit, offset)
-//                if (cartItems.data?.isEmpty() == true) break
-//
-//                if (cartItems.data?.any { it.product.productId == id } == true) {
-//                    found = true
-//                    break
-//                }
-//
-//                offset += limit
-//            }
-//            uiState = uiState.copy(isItemInCart = found)
-//        }
-//    }
-
     private fun fetchProductData(id: String) {
-        uiState = uiState.copy(isLoading = true)
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = fetchProductDataUseCase(id)
-            brandId = result.data?.brandId
-            subCategoryId = result.data?.subCategoryId
-            uiState = when (result) {
+            delay(1000)
+            when (val result = fetchProductDataUseCase(id)) {
                 is Result.Error -> {
-                    uiState.copy(isLoading = false, error = result.message)
+                    _uiState.update { it.copy(isLoading = false, error = result.message) }
                 }
-
                 is Result.Success -> {
-                    uiState.copy(isLoading = false, product = result.data)
+                    brandId = result.data?.brandId
+                    subCategoryId = result.data?.subCategoryId
+                    _uiState.update { it.copy(isLoading = false, product = result.data) }
                 }
             }
         }
@@ -83,14 +65,14 @@ class ProductDetailViewModel(
 
     private fun addToCart(qty: Int) {
         viewModelScope.launch {
-            val result = addItemsToCart(productId = currentId!!, qty = qty)
-            uiState = when (result) {
-                is Result.Error -> {
-                    uiState.copy(error = result.message)
-                }
-
-                is Result.Success -> {
-                    uiState.copy(success = result.data)
+            currentId?.let {
+                when (val result = addItemsToCart(productId = it, qty = qty)) {
+                    is Result.Error -> {
+                        _uiState.update { it.copy(error = result.message) }
+                    }
+                    is Result.Success -> {
+                        _uiState.update { it.copy(success = result.data) }
+                    }
                 }
             }
         }
@@ -98,44 +80,44 @@ class ProductDetailViewModel(
 
     private fun addToWishList() {
         viewModelScope.launch {
-            val result = addItemsToWishlistUseCase(productId = currentId!!)
-            uiState = when (result) {
-                is Result.Error -> {
-                    uiState.copy(error = result.message)
-                }
-
-                is Result.Success -> {
-                    uiState.copy(success = result.data, isWishListed = true)
+            currentId?.let {
+                when (val result = addItemsToWishlistUseCase(productId = it)) {
+                    is Result.Error -> {
+                        _uiState.update { it.copy(error = result.message) }
+                    }
+                    is Result.Success -> {
+                        _uiState.update { it.copy(success = result.data, isWishListed = true) }
+                    }
                 }
             }
         }
     }
 
     private fun getSubCategoryProducts() {
-        viewModelScope.launch {
-            val result = getFeedProducts(subCategoryId!!)
-            uiState = when (result) {
-                is Result.Error -> {
-                    uiState.copy(error = result.message)
-                }
-
-                is Result.Success -> {
-                    uiState.copy(subCategoryProducts = result.data)
+        subCategoryId?.let { subCategoryId ->
+            viewModelScope.launch {
+                when (val result = getFeedProducts(subCategoryId)) {
+                    is Result.Error -> {
+                        _uiState.update { it.copy(error = result.message) }
+                    }
+                    is Result.Success -> {
+                        _uiState.update { it.copy(subCategoryProducts = result.data) }
+                    }
                 }
             }
         }
     }
 
     private fun getSimilarBrandItems() {
-        viewModelScope.launch {
-            val result = getProductsByBrand(brandId!!)
-            uiState = when (result) {
-                is Result.Error -> {
-                    uiState.copy(error = result.message)
-                }
-
-                is Result.Success -> {
-                    uiState.copy(similarBrandItems = result.data)
+        brandId?.let { brandId ->
+            viewModelScope.launch {
+                when (val result = getProductsByBrand(brandId)) {
+                    is Result.Error -> {
+                        _uiState.update { it.copy(error = result.message) }
+                    }
+                    is Result.Success -> {
+                        _uiState.update { it.copy(similarBrandItems = result.data) }
+                    }
                 }
             }
         }
@@ -144,16 +126,17 @@ class ProductDetailViewModel(
     fun onUiEvent(action: ProductDetailEvent) {
         when (action) {
             is ProductDetailEvent.AddToCart -> addToCart(action.qty)
-            is ProductDetailEvent.AddToWishlist -> {}
+            is ProductDetailEvent.AddToWishlist -> addToWishList()
             is ProductDetailEvent.BuyNow -> addToWishList()
             ProductDetailEvent.FetchData -> {
-                fetchProductData(currentId!!)
-//                getSubCategoryProducts()
-//                getSimilarBrandItems()
+                currentId?.let {
+                    fetchProductData(it)
+                    getSubCategoryProducts()
+                    getSimilarBrandItems()
+                }
             }
         }
     }
-
 }
 
 sealed class ProductDetailEvent {

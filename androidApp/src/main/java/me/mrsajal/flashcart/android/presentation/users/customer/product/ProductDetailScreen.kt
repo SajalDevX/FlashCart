@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -26,21 +28,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import me.mrsajal.flashcart.android.presentation.components.VerticalDivider
+import me.mrsajal.flashcart.android.presentation.users.customer.product.components.ProductImagePager
 
 @Composable
 fun ProductDetailScreen(
     modifier: Modifier = Modifier,
-    productDetailUiState: ProductDetailUiState,
-    productDetailEvent: (ProductDetailEvent) -> Unit,
+    uiState: ProductDetailUiState,
+    onEvent: (ProductDetailEvent) -> Unit,
+    navController: NavController
 ) {
+
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 modifier = modifier
@@ -54,13 +60,12 @@ fun ProductDetailScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 8.dp)
                         .statusBarsPadding(),
-
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             Icons.Default.ArrowBack,
                             contentDescription = "Back",
@@ -92,11 +97,9 @@ fun ProductDetailScreen(
                     .border(1.dp, Color.Gray.copy(0.3f))
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
-
-                    ) {
+                ) {
                     Button(
                         onClick = { /* Handle Add to Cart action */ },
                         shape = RectangleShape,
@@ -119,14 +122,39 @@ fun ProductDetailScreen(
                         Text(text = "Buy Now", fontSize = 16.sp)
                     }
                 }
-
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = modifier.padding(innerPadding)
-        ) {
-
+        if (uiState.isLoading) {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            Column(
+                modifier = modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(Color.White)
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    item {
+                        ProductImagePager(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            product = uiState.product,
+                            images = uiState.product?.images ?: listOf()
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -135,7 +163,8 @@ fun ProductDetailScreen(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        productDetailUiState = ProductDetailUiState(),
-        productDetailEvent = {}
+        uiState = ProductDetailUiState(),
+        onEvent = {},
+        navController = NavController(context = LocalContext.current)
     )
 }

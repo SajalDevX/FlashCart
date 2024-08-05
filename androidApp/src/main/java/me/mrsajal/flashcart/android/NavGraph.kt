@@ -30,15 +30,11 @@ import me.mrsajal.flashcart.android.auth.signup.screens.UserDetailScreen
 import me.mrsajal.flashcart.android.common.util.routes.Routes
 import me.mrsajal.flashcart.android.presentation.components.BottomAppBar
 import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
-import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreen
-import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenViewModel
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
-import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartScreen
-import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.cart.Cart
+import me.mrsajal.flashcart.android.presentation.users.customer.home.CustomerHome
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetail
-import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetailScreen
-import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistScreen
-import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.Wishlist
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -49,20 +45,18 @@ fun NavGraph(
     uiState: MainActivityUiState
 ) {
     val navController = rememberNavController()
+
     val signUpViewModel: SignupViewModel = koinViewModel()
     val signUpUiState = signUpViewModel.uiState
 
     val loginViewModel: LoginViewModel = koinViewModel()
     val loginUiState = loginViewModel.uiState
 
-    val homeViewModel: HomeScreenViewModel = koinViewModel()
-    val homeUiState = homeViewModel.homeUiState
 
-    val wishlistViewModel: WishlistViewModel = koinViewModel()
-    val wishListUiState = wishlistViewModel.uiState
 
-    val cartViewModel: CartViewModel = koinViewModel()
-    val cartUiState = cartViewModel.uiState
+
+
+
 
 
     val bottomNavigationItems = remember {
@@ -259,37 +253,23 @@ fun NavGraph(
                     OnBoardingScreen(navController = navController)
                 }
                 composable(Routes.Home.route) {
-                    HomeScreen(
-                        homeUiState = homeUiState,
-                        fetchData = homeViewModel::fetchData,
-                        homeRefreshState = homeViewModel.homeRefreshState,
-                        navController = navController,
-                        onUiAction = homeViewModel::onUiAction
-                    )
+                    CustomerHome(navController)
                 }
                 composable(Routes.Wishlist.route) {
-                    WishlistScreen(
-                        uiState = wishListUiState,
-                        fetchData = wishlistViewModel::getWishListItems,
-                        event = wishlistViewModel::onUiAction
-                    )
+                   Wishlist(navController)
                 }
                 composable(Routes.Cart.route) {
-                    CartScreen(
-                        cartUiState = cartUiState,
-                        fetchData = cartViewModel::getCartItems,
-                        cartUiAction = cartViewModel::handleAction,
-                        fetchAddress = cartViewModel::getAddressData,
-                        navigateToProduct = {
+                   Cart(navController)
+                }
+                composable(route = Routes.ProductDetailScreen.route + "?productId={productId}",
+                    arguments = listOf(
+                        navArgument(name = "productId") {
+                            type = NavType.StringType
+                            defaultValue = ""
                         }
                     )
-                }
-                composable(
-                    route = Routes.ProductDetailScreen.route + "/{productId}",
-                    arguments = listOf(navArgument("productId") { type = NavType.StringType })
                 ) {
-                    ProductDetail(
-                    )
+                    ProductDetail(navController)
                 }
             }
         }

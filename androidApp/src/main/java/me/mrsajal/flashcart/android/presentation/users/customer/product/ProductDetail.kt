@@ -1,22 +1,21 @@
 package me.mrsajal.flashcart.android.presentation.users.customer.product
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProductDetail(
-    modifier: Modifier = Modifier
+    navController: NavController
 ) {
-    val viewModel: ProductDetailViewModel = koinViewModel()
-    val onEvent = viewModel::onUiEvent
-    LaunchedEffect(Unit) {
-        onEvent(ProductDetailEvent.FetchData)
-    }
+    val productDetailViewModel: ProductDetailViewModel = koinViewModel()
+    val productDetailUiState = productDetailViewModel.uiState.collectAsStateWithLifecycle().value
+
     ProductDetailScreen(
-        productDetailUiState = viewModel.uiState,
-        productDetailEvent = onEvent,
+        onEvent = productDetailViewModel::onUiEvent,
+        uiState = productDetailUiState,
+        navController = navController
     )
 
 }

@@ -1,18 +1,14 @@
 package me.mrsajal.flashcart.android.presentation.users.customer.cart
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import me.mrsajal.flashcart.common.utils.Result
 import me.mrsajal.flashcart.features.cart.domain.model.CartListData
-import me.mrsajal.flashcart.features.cart.domain.usecases.DeleteAllItemsFromCart
-import me.mrsajal.flashcart.features.cart.domain.usecases.DeleteItemQtyFromCartUseCase
-import me.mrsajal.flashcart.features.cart.domain.usecases.GetCartItemsUseCase
-import me.mrsajal.flashcart.features.cart.domain.usecases.IncreaseItemQtyInCartUseCase
+import me.mrsajal.flashcart.features.cart.domain.usecases.*
 import me.mrsajal.flashcart.features.profile.data.UserAddress
 import me.mrsajal.flashcart.features.profile.domain.usecases.GetProfileUseCase
 import me.mrsajal.flashcart.features.wishlist.domain.usecases.AddItemsToWishlistUseCase
@@ -25,272 +21,202 @@ class CartViewModel(
     private val userProfileUseCase: GetProfileUseCase,
     private val wishlistUseCase: AddItemsToWishlistUseCase
 ) : ViewModel() {
-    var uiState by mutableStateOf(CartScreenUiState())
-        private set
 
-    fun getCartItems() {
+    private val _uiState = MutableStateFlow(CartScreenUiState())
+    val uiState: StateFlow<CartScreenUiState> = _uiState.asStateFlow()
+
+    init {
+        getCartItems()
+        getAddressData()
+    }
+
+    private fun getCartItems() {
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                uiState = uiState.copy(isLoading = true)
-                val result = getCartItemsUseCase(limit = 4, offset = 5)
-                when (result) {
-                    is Result.Error -> {
-                        uiState = uiState.copy(
-                            error = result.message,
-                            isLoading = false
-                        )
-                    }
-
-                    is Result.Success -> {
-                        val itemData = result.data
-                        if (itemData != null) {
-                            uiState = uiState.copy(
-                                cartItems = itemData,
-                                isLoading = false,
-                                isEmpty = itemData.isEmpty()
-                            )
-                        }
-                    }
+            delay(1000)
+            val result = runCatching { getCartItemsUseCase(limit = 4, offset = 5) }
+            _uiState.update {
+                when (val data = result.getOrNull()) {
+                    is Result.Success -> it.copy(
+                        cartItems = data.data ?: emptyList(),
+                        isLoading = false,
+                        isEmpty = data.data?.isEmpty() ?: true
+                    )
+                    is Result.Error -> it.copy(
+                        error = data.message,
+                        isLoading = false
+                    )
+                    else -> it.copy(isLoading = false)
                 }
-            } catch (e: Exception) {
-                uiState = uiState.copy(error = e.message, isLoading = false)
             }
         }
     }
 
-    private fun removeAllItemsFromCart() {
-        viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true)
-            try {
-                val result = removeAllItemsFromCartUseCase()
-                uiState = when (result) {
-                    is Result.Error -> {
-                        uiState.copy(
-                            error = result.message,
-                            isLoading = false
-                        )
-                    }
-
-                    is Result.Success -> {
-                        uiState.copy(
-                            cartItems = emptyList(),
-                            isEmpty = true,
-                            isLoading = false
-                        )
-                    }
+    private fun updateCartState(
+        result: Result<Boolean>?,
+        updatedItems: List<CartListData>
+    ) {
+        _uiState.update {
+            when (result) {
+                is Result.Success -> {
+                    val selectedTotalPrice = calculateSelectedTotalPrice(updatedItems, it.selectedItems)
+                    val selectedDiscountedPrice = calculateSelectedDiscountedPrice(updatedItems, it.selectedItems)
+                    it.copy(
+                        cartItems = updatedItems,
+                        selectedTotalPrice = selectedTotalPrice,
+                        selectedDiscountedPrice = selectedDiscountedPrice,
+                        isLoading = false
+                    )
                 }
-            } catch (e: Exception) {
-                uiState = uiState.copy(
-                    error = e.message,
+                is Result.Error -> it.copy(
+                    error = result.message,
                     isLoading = false
                 )
+                else -> it.copy(isLoading = false)
             }
         }
     }
 
     private fun increaseItemQtyInCart(id: String) {
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true)
-
-            try {
-                val result = increaseCartItemsUseCase(id, 1)
-                Log.e("CartViewModel", "Increase Cart items: ${result.message}")
-
-                when (result) {
-                    is Result.Error -> {
-                        uiState = uiState.copy(
-                            error = result.message,
-                            isLoading = false
-                        )
-                    }
-
-                    is Result.Success -> {
-                        val updatedItems = uiState.cartItems.map { item ->
-                            if (item.product.productId == id) {
-                                item.copy(qty = item.qty + 1)
-                            } else {
-                                item
-                            }
-                        }
-
-                        val newSelectedItems = uiState.selectedItems
-                        val selectedTotalPrice =
-                            calculateSelectedTotalPrice(updatedItems, newSelectedItems)
-                        val selectedDiscountedPrice =
-                            calculateSelectedDiscountedPrice(updatedItems, newSelectedItems)
-
-                        uiState = uiState.copy(
-                            cartItems = updatedItems,
-                            selectedTotalPrice = selectedTotalPrice,
-                            selectedDiscountedPrice = selectedDiscountedPrice,
-                            isLoading = false
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                uiState = uiState.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+            val result = runCatching { increaseCartItemsUseCase(id, 1) }.getOrNull()
+            val updatedItems = _uiState.value.cartItems.map { item ->
+                if (item.product.productId == id) item.copy(qty = item.qty + 1) else item
             }
+            updateCartState(result, updatedItems)
         }
     }
 
     private fun decreaseItemQtyInCart(id: String) {
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true)
+            val result = runCatching { decreaseCartItemsUseCase(id, 1) }.getOrNull()
+            val updatedItems = _uiState.value.cartItems.mapNotNull { item ->
+                if (item.product.productId == id) item.copy(qty = item.qty - 1)
+                    .takeIf { it.qty > 0 }
+                else item
+            }
+            updateCartState(result, updatedItems)
+        }
+    }
 
-            try {
-                val result = decreaseCartItemsUseCase(id, 1)
-                Log.e("CartViewModel", "Decrease Cart items: ${result}")
-
+    private fun removeAllItemsFromCart() {
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            val result = runCatching { removeAllItemsFromCartUseCase() }.getOrNull()
+            _uiState.update {
                 when (result) {
-                    is Result.Error -> {
-                        uiState = uiState.copy(
-                            error = result.message,
-                            isLoading = false
-                        )
-                    }
-
-                    is Result.Success -> {
-                        val updatedItems = uiState.cartItems.map { item ->
-                            if (item.product.productId == id) {
-                                item.copy(qty = item.qty - 1).takeIf { it.qty > 0 }
-                            } else {
-                                item
-                            }
-                        }.filterNotNull()
-
-                        val newSelectedItems = uiState.selectedItems
-                        val selectedTotalPrice =
-                            calculateSelectedTotalPrice(updatedItems, newSelectedItems)
-                        val selectedDiscountedPrice =
-                            calculateSelectedDiscountedPrice(updatedItems, newSelectedItems)
-
-                        uiState = uiState.copy(
-                            cartItems = updatedItems,
-                            selectedTotalPrice = selectedTotalPrice,
-                            selectedDiscountedPrice = selectedDiscountedPrice,
-                            isLoading = false
-                        )
-                    }
+                    is Result.Success -> it.copy(
+                        cartItems = emptyList(),
+                        isEmpty = true,
+                        isLoading = false
+                    )
+                    is Result.Error -> it.copy(
+                        error = result.message,
+                        isLoading = false
+                    )
+                    else -> it.copy(isLoading = false)
                 }
-            } catch (e: Exception) {
-                uiState = uiState.copy(
-                    error = e.message,
-                    isLoading = false
-                )
             }
         }
     }
 
     private fun toggleSelectAll() {
         viewModelScope.launch {
-            val selectAll = !uiState.selectAll
+            val selectAll = !_uiState.value.selectAll
             val newSelectedItems = if (selectAll) {
-                uiState.cartItems.map { it.product.productId }.toSet()
+                _uiState.value.cartItems.map { it.product.productId }.toSet()
             } else {
                 emptySet()
             }
-            val selectedTotalPrice =
-                calculateSelectedTotalPrice(uiState.cartItems, newSelectedItems)
-            val selectedDiscountedPrice =
-                calculateSelectedDiscountedPrice(uiState.cartItems, newSelectedItems)
-            uiState = uiState.copy(
-                selectedItems = newSelectedItems,
-                selectAll = selectAll,
-                selectedTotalPrice = selectedTotalPrice,
-                selectedDiscountedPrice = selectedDiscountedPrice
-            )
+            val selectedTotalPrice = calculateSelectedTotalPrice(_uiState.value.cartItems, newSelectedItems)
+            val selectedDiscountedPrice = calculateSelectedDiscountedPrice(_uiState.value.cartItems, newSelectedItems)
+            _uiState.update {
+                it.copy(
+                    selectedItems = newSelectedItems,
+                    selectAll = selectAll,
+                    selectedTotalPrice = selectedTotalPrice,
+                    selectedDiscountedPrice = selectedDiscountedPrice
+                )
+            }
         }
     }
 
     private fun selectItem(id: String, isSelected: Boolean) {
         viewModelScope.launch {
-            val newSelectedItems = uiState.selectedItems.toMutableSet().apply {
+            val newSelectedItems = _uiState.value.selectedItems.toMutableSet().apply {
                 if (isSelected) add(id) else remove(id)
             }
-            val selectedTotalPrice =
-                calculateSelectedTotalPrice(uiState.cartItems, newSelectedItems)
-            val selectedDiscountedPrice =
-                calculateSelectedDiscountedPrice(uiState.cartItems, newSelectedItems)
-            uiState = uiState.copy(
-                selectedItems = newSelectedItems,
-                selectedTotalPrice = selectedTotalPrice,
-                selectedDiscountedPrice = selectedDiscountedPrice
-            )
+            val selectedTotalPrice = calculateSelectedTotalPrice(_uiState.value.cartItems, newSelectedItems)
+            val selectedDiscountedPrice = calculateSelectedDiscountedPrice(_uiState.value.cartItems, newSelectedItems)
+            _uiState.update {
+                it.copy(
+                    selectedItems = newSelectedItems,
+                    selectedTotalPrice = selectedTotalPrice,
+                    selectedDiscountedPrice = selectedDiscountedPrice
+                )
+            }
         }
     }
 
-    private fun calculateSelectedTotalPrice(
-        cartItems: List<CartListData>,
-        selectedItems: Set<String>
-    ): Int {
+    private fun calculateSelectedTotalPrice(cartItems: List<CartListData>, selectedItems: Set<String>): Int {
         return cartItems.filter { it.product.productId in selectedItems }
             .sumOf { it.product.price.toInt() * it.qty }
     }
 
-    private fun calculateSelectedDiscountedPrice(
-        cartItems: List<CartListData>,
-        selectedItems: Set<String>
-    ): Int {
+    private fun calculateSelectedDiscountedPrice(cartItems: List<CartListData>, selectedItems: Set<String>): Int {
         return cartItems.filter { it.product.productId in selectedItems }
             .sumOf { it.product.discountPrice!!.toInt() * it.qty }
     }
 
-    fun getAddressData() {
+    private fun getAddressData() {
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true)
-            val result = userProfileUseCase()
-            uiState = when (result) {
-                is Result.Error -> {
-                    uiState.copy(
+            delay(1000)
+            val result = runCatching { userProfileUseCase() }.getOrNull()
+            _uiState.update {
+                when (result) {
+                    is Result.Success -> {
+                        val addresses = result.data?.userDetails?.addresses ?: emptyList()
+                        val selectedAddress = addresses.firstOrNull()
+                        it.copy(
+                            address = addresses,
+                            selectedAddress = selectedAddress,
+                            isLoading = false
+                        )
+                    }
+                    is Result.Error -> it.copy(
                         error = result.message,
                         isLoading = false
                     )
-                }
-
-                is Result.Success -> {
-                    val addresses = result.data?.userDetails?.addresses ?: emptyList()
-                    val selectedAddress = addresses.firstOrNull()
-                    uiState.copy(
-                        address = addresses,
-                        selectedAddress = selectedAddress,
-                        isLoading = false
-                    )
+                    else -> it.copy(isLoading = false)
                 }
             }
         }
     }
 
     private fun selectAddress(address: UserAddress) {
-        uiState = uiState.copy(selectedAddress = address)
+        _uiState.update { it.copy(selectedAddress = address) }
     }
 
-    fun addToWishlist(productId: String) {
+    private fun addToWishlist(productId: String) {
         viewModelScope.launch {
-            try {
-                uiState = uiState.copy(isLoading = true)
-                val result = wishlistUseCase(productId)
+            _uiState.update { it.copy(isLoading = true) }
+            val result = runCatching { wishlistUseCase(productId) }.getOrNull()
+            _uiState.update {
                 when (result) {
-                    is Result.Error -> {
-                        uiState = uiState.copy(
-                            error = result.message,
-                            isLoading = false
-                        )
-                    }
-
                     is Result.Success -> {
                         Log.d("CartViewModel", "Item added to wishlist: $productId")
-//                        removeItemFromCart(productId)
+                        it.copy(isLoading = false)
                     }
+                    is Result.Error -> it.copy(
+                        error = result.message,
+                        isLoading = false
+                    )
+                    else -> it.copy(isLoading = false)
                 }
-            } catch (e: Exception) {
-                uiState = uiState.copy(error = e.message, isLoading = false)
             }
         }
     }
-
 
     fun handleAction(action: CartUiAction) {
         when (action) {
