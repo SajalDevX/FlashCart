@@ -17,5 +17,5 @@ val appModule = module {
     viewModel { HomeScreenViewModel(get()) }
     viewModel { WishlistViewModel(get(), get()) }
     viewModel { CartViewModel(get(), get(), get(), get(), get(), get()) }
-    viewModel { ProductDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ProductDetailViewModel(get(), get(), get(), get(), get(), get(), get(),get(),get(),get()) }
 }
