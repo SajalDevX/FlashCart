@@ -224,7 +224,7 @@ class CartViewModel(
             is CartUiAction.IncreaseItemCount -> increaseItemQtyInCart(action.id)
             is CartUiAction.ReduceItemCount -> decreaseItemQtyInCart(action.id)
             is CartUiAction.RemoveItem -> {}
-            is CartUiAction.Checkout -> {} // Handle Checkout action as needed
+            is CartUiAction.Checkout -> {}
             is CartUiAction.SelectItem -> selectItem(action.id, action.isSelected)
             is CartUiAction.SelectAddress -> selectAddress(action.address)
             is CartUiAction.ToggleSelectAll -> toggleSelectAll()

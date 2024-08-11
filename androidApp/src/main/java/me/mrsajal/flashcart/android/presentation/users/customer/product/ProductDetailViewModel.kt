@@ -33,8 +33,7 @@ class ProductDetailViewModel(
     private val removeItemsFromWishlistUseCase: RemoveItemsFromWishlistUseCase,
     private val getWishlistItemsUseCase: GetWishListItemsUseCase,
     private val userProfileUseCase: GetProfileUseCase,
-
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductDetailUiState())
     val uiState: StateFlow<ProductDetailUiState> = _uiState
@@ -226,7 +225,6 @@ class ProductDetailViewModel(
             }
 
             is ProductDetailEvent.SelectAddress -> selectAddress(action.address)
-
         }
     }
 }
@@ -249,5 +247,5 @@ data class ProductDetailUiState(
     val isItemInCart: Boolean = false,
     val isWishListed: Boolean = false,
     val success: Boolean? = null,
-    val error: String? = null
+    val error: String? = null,
 )

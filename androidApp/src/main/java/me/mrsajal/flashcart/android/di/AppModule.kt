@@ -3,6 +3,8 @@ package me.mrsajal.flashcart.android.di
 import me.mrsajal.flashcart.android.MainActivityViewModel
 import me.mrsajal.flashcart.android.auth.login.LoginViewModel
 import me.mrsajal.flashcart.android.auth.signup.SignupViewModel
+import me.mrsajal.flashcart.android.presentation.edit_profile.profile.EditProfileViewModel
+import me.mrsajal.flashcart.android.presentation.profile.ProfileViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetailViewModel
@@ -18,4 +20,6 @@ val appModule = module {
     viewModel { WishlistViewModel(get(), get()) }
     viewModel { CartViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { ProductDetailViewModel(get(), get(), get(), get(), get(), get(), get(),get(),get(),get()) }
+    viewModel { EditProfileViewModel(get(),get()) }
+    viewModel { ProfileViewModel(get()) }
 }

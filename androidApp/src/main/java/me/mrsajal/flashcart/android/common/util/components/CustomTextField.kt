@@ -36,7 +36,8 @@ fun CustomTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     isPasswordTextField: Boolean = false,
     isSingleLine: Boolean = true,
-    @StringRes hint: Int,
+    @StringRes hint: Int? = null,
+    label: Int? = null,
     isValid: Boolean,
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -90,9 +91,15 @@ fun CustomTextField(
             VisualTransformation.None
         },
         isError = !isValid,
-
+        label = {
+            if (label != null) {
+                Text(text = stringResource(id = label), style = MaterialTheme.typography.body2)
+            }
+        },
         placeholder = {
-            Text(text = stringResource(id = hint), style = MaterialTheme.typography.body2)
+            if (hint != null) {
+                Text(text = stringResource(id = hint), style = MaterialTheme.typography.body2)
+            }
         },
         shape = RoundedCornerShape(12.dp)
     )

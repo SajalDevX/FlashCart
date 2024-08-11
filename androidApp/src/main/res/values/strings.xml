@@ -22,4 +22,8 @@
     <string name="create_password_subheading">Make sure to use a strong password</string>
     <string name="login_button_hint">Log in</string>
     <string name="add_to_cart">Add to cart</string>
+    <string name="enter_name">Name</string>
+    <string name="enter_age">Age</string>
+    <string name="enter_mobile">Mobile number</string>
+    <string name="enter_gender">Gender</string>
 </resources>

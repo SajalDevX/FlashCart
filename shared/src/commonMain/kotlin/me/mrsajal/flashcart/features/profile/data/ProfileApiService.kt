@@ -36,15 +36,15 @@ internal class ProfileApiService : KtorApi() {
         fileData: ByteArray,
         fileName: String
     ): ProfileApiResponse {
-        val httpResponse = client.put{
+        val httpResponse = client.put {
             endPoint("profile")
             setToken(userToken)
             setFormData(
-                params = mapOf("profile_ data" to Json.encodeToString(updateProfile)),
+                params = mapOf("profile_data" to Json.encodeToString(updateProfile)),
                 fileData = fileData,
                 fileName = fileName,
                 fileFieldName = "profile_image",
-                fileContentType = ContentType.Any
+                fileContentType = ContentType.Image.Any
             )
         }
         return ProfileApiResponse(
@@ -52,6 +52,7 @@ internal class ProfileApiService : KtorApi() {
             code = httpResponse.status
         )
     }
+
     suspend fun updateAddress(
         userToken: String,
         updateAddress: UpdateUserAddressRequest

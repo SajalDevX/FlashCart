@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.features.cart.domain.repository
+package me.mrsajal.flashcart.features.cart.data
 
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.async
@@ -7,8 +7,8 @@ import kotlinx.coroutines.withContext
 import me.mrsajal.flashcart.common.data.local.UserPreferences
 import me.mrsajal.flashcart.common.utils.DispatcherProvider
 import me.mrsajal.flashcart.common.utils.Result
-import me.mrsajal.flashcart.features.cart.data.CartApiService
 import me.mrsajal.flashcart.features.cart.domain.model.CartListData
+import me.mrsajal.flashcart.features.cart.domain.repository.CartRepository
 import me.mrsajal.flashcart.features.products.data.ProductApiService
 import okio.IOException
 

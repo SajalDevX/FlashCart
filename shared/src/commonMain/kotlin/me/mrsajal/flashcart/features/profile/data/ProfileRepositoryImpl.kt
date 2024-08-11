@@ -45,7 +45,6 @@ internal class ProfileRepositoryImpl(
                 }
 
             } catch (ioException: IOException) {
-                logger.e(ioException) { "No Internet" }
                 Result.Error(message = "No Internet")
             } catch (exception: Throwable) {
                 logger.e(exception) { "An unexpected error occurred: ${exception.message}" }
@@ -68,6 +67,8 @@ internal class ProfileRepositoryImpl(
                     fileName = fileName,
                     updateProfile = updateProfile
                 )
+                println("ProfileRepository API Response: ${apiResponse.data.data}")
+
                 when (apiResponse.code) {
                     HttpStatusCode.OK -> {
                         Result.Success(

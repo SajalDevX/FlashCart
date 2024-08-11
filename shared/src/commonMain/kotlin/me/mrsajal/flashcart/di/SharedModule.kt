@@ -14,7 +14,7 @@ import me.mrsajal.flashcart.features.brands.domain.usecases.DeleteBrandUseCase
 import me.mrsajal.flashcart.features.brands.domain.usecases.GetBrandsUseCase
 import me.mrsajal.flashcart.features.cart.data.CartApiService
 import me.mrsajal.flashcart.features.cart.domain.repository.CartRepository
-import me.mrsajal.flashcart.features.cart.domain.repository.CartRepositoryImpl
+import me.mrsajal.flashcart.features.cart.data.CartRepositoryImpl
 import me.mrsajal.flashcart.features.cart.domain.usecases.AddItemToCartUseCase
 import me.mrsajal.flashcart.features.cart.domain.usecases.DeleteAllItemsFromCart
 import me.mrsajal.flashcart.features.cart.domain.usecases.DeleteItemQtyFromCartUseCase

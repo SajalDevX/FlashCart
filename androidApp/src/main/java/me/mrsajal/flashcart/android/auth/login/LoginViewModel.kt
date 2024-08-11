@@ -61,14 +61,14 @@ class LoginViewModel(
         return email.matches(emailRegex)
     }
 
-    fun validatePassword(): String? {
+    private fun validatePassword(): String? {
         if (uiState.password.isBlank()) {
             return "Password cannot be empty."
         }
         return null
     }
 
-    fun validateEmail(): String? {
+    private fun validateEmail(): String? {
         if (uiState.email.isBlank()) {
             return "Email cannot be empty."
         }

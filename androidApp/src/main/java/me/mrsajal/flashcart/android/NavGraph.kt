@@ -31,6 +31,8 @@ import me.mrsajal.flashcart.android.common.util.routes.Routes
 import me.mrsajal.flashcart.android.presentation.components.BottomAppBar
 import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
+import me.mrsajal.flashcart.android.presentation.edit_profile.profile.EditProfileDataScreen
+import me.mrsajal.flashcart.android.presentation.profile.ProfileDataScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.Cart
 import me.mrsajal.flashcart.android.presentation.users.customer.home.CustomerHome
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetail
@@ -270,6 +272,12 @@ fun NavGraph(
                     )
                 ) {
                     ProductDetail(navController)
+                }
+                composable(Routes.Profile.route) {
+                    ProfileDataScreen(navController)
+                }
+                composable(Routes.EditProfile.route) {
+                    EditProfileDataScreen(navController)
                 }
             }
         }
