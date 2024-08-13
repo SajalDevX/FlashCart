@@ -42,7 +42,7 @@ data class UpdateProfileRequest(
 )
 
 @Serializable
-data class UpdateUserAddressRequest(
+data class AddUserAddressRequest(
     val fatherName: String,
     val motherName: String,
     val pin: String,

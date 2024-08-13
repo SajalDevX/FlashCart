@@ -93,13 +93,45 @@ internal class ProfileRepositoryImpl(
         }
     }
 
-    override suspend fun updateAddress(updateAddress: UpdateUserAddressRequest): Result<Boolean> {
+    override suspend fun addAddress(updateAddress: AddUserAddressRequest): Result<Boolean> {
         return withContext(dispatcher.io) {
             try {
                 val userData = userPreferences.getUserData()
-                val apiResponse = profileApi.updateAddress(
+                val apiResponse = profileApi.addAddress(
                     userToken = userData.token,
                     updateAddress = updateAddress
+                )
+                when (apiResponse.code) {
+                    HttpStatusCode.OK -> {
+                        Result.Success(
+                            data = apiResponse.data.success
+                        )
+                    }
+
+                    HttpStatusCode.BadRequest -> {
+                        Result.Error(message = apiResponse.data.message)
+                    }
+
+                    else -> {
+                        Result.Error(message = apiResponse.data.message)
+                    }
+                }
+
+            } catch (ioException: IOException) {
+                Result.Error(message = "No Internet")
+            } catch (exception: Throwable) {
+                Result.Error(message = "${exception.message}")
+            }
+        }
+    }
+
+    override suspend fun deleteAddress(index: Int): Result<Boolean> {
+        return withContext(dispatcher.io) {
+            try {
+                val userData = userPreferences.getUserData()
+                val apiResponse = profileApi.deleteAddress(
+                    userToken = userData.token,
+                    index
                 )
                 when (apiResponse.code) {
                     HttpStatusCode.OK -> {

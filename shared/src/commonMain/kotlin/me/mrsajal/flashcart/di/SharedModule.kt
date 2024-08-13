@@ -67,7 +67,8 @@ import me.mrsajal.flashcart.features.profile.data.ProfileApiService
 import me.mrsajal.flashcart.features.profile.domain.repository.ProfileRepository
 import me.mrsajal.flashcart.features.profile.data.ProfileRepositoryImpl
 import me.mrsajal.flashcart.features.profile.domain.usecases.GetProfileUseCase
-import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateAddressUseCase
+import me.mrsajal.flashcart.features.profile.domain.usecases.AddNewAddressUseCase
+import me.mrsajal.flashcart.features.profile.domain.usecases.DeleteAddressUseCase
 import me.mrsajal.flashcart.features.profile.domain.usecases.UpdateProfileUseCase
 import me.mrsajal.flashcart.features.shipping.data.ShippingApiService
 import me.mrsajal.flashcart.features.shipping.domain.repository.ShippingRepository
@@ -175,7 +176,8 @@ private val profileModule = module {
     single<ProfileRepository> { ProfileRepositoryImpl(get(), get(), get()) }
     factory { GetProfileUseCase() }
     factory { UpdateProfileUseCase() }
-    factory { UpdateAddressUseCase() }
+    factory { DeleteAddressUseCase() }
+    factory { AddNewAddressUseCase() }
 }
 private val shippingModule = module {
     factory { ShippingApiService() }

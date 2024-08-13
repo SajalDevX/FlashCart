@@ -13,13 +13,13 @@ fun ProfileDataScreen(navController: NavController) {
     ProfileScreen(
         uiState = uiState,
         onLogout = {},
-        onNaviToEditProfile = {navController.navigate(Routes.EditProfile.route)},
+        onNaviToEditProfile = { navController.navigate(Routes.EditProfile.route) },
         onNavToAbout = {},
         onNavToOrders = {},
         onNavToCart = {},
         onNavToHelp = {},
         onNavToReviews = {},
-        onNaviToAddress = {},
+        onNaviToAddress = { navController.navigate(Routes.AddressMainScreen.route) },
         onNavToSettings = {},
         onNavToWishlist = {}
     )

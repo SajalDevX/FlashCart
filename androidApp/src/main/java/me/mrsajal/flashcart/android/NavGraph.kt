@@ -33,6 +33,7 @@ import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
 import me.mrsajal.flashcart.android.presentation.edit_profile.profile.EditProfileDataScreen
 import me.mrsajal.flashcart.android.presentation.profile.ProfileDataScreen
+import me.mrsajal.flashcart.android.presentation.users.customer.address.AddressMainScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.Cart
 import me.mrsajal.flashcart.android.presentation.users.customer.home.CustomerHome
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetail
@@ -53,12 +54,6 @@ fun NavGraph(
 
     val loginViewModel: LoginViewModel = koinViewModel()
     val loginUiState = loginViewModel.uiState
-
-
-
-
-
-
 
 
     val bottomNavigationItems = remember {
@@ -258,10 +253,10 @@ fun NavGraph(
                     CustomerHome(navController)
                 }
                 composable(Routes.Wishlist.route) {
-                   Wishlist(navController)
+                    Wishlist(navController)
                 }
                 composable(Routes.Cart.route) {
-                   Cart(navController)
+                    Cart(navController)
                 }
                 composable(route = Routes.ProductDetailScreen.route + "?productId={productId}",
                     arguments = listOf(
@@ -278,6 +273,9 @@ fun NavGraph(
                 }
                 composable(Routes.EditProfile.route) {
                     EditProfileDataScreen(navController)
+                }
+                composable(Routes.AddressMainScreen.route) {
+                    AddressMainScreen(navController)
                 }
             }
         }

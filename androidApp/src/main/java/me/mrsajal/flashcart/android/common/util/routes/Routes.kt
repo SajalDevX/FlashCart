@@ -15,6 +15,7 @@ sealed class Routes (val route: String){
     data object Profile : Routes("Profile")
     data object EditProfile : Routes("EditProfile")
     data object Cart : Routes("Cart")
+    data object AddressMainScreen : Routes("AddressMainScreen")
 
 
     data object AdminHome : Routes("AdminHome")
