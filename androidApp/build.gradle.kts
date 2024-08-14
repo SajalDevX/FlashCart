@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("com.google.devtools.ksp") version "1.9.23-1.0.20"
     kotlin("plugin.serialization") version "1.9.10"
+    id("kotlin-parcelize")
 }
 
 android {
@@ -48,6 +49,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.gson)
 
     implementation(libs.koin.androidx.compose)
 
@@ -57,4 +59,6 @@ dependencies {
     implementation(libs.jetpack.compose.country.code.picker.emoji)
 
     implementation(libs.coil.compose)
+    implementation (libs.kotlin.stdlib)
+
 }

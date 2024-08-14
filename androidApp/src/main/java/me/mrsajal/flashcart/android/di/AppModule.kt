@@ -8,6 +8,7 @@ import me.mrsajal.flashcart.android.presentation.profile.ProfileViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.address.AddressViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.place_order.CheckOutViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetailViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.WishlistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -24,4 +25,5 @@ val appModule = module {
     viewModel { ProfileViewModel(get()) }
     viewModel { EditProfileViewModel(get(),get()) }
     viewModel { AddressViewModel(get(),get()) }
+    viewModel { CheckOutViewModel(get(),get(),get()) }
 }

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     kotlin("plugin.serialization") version "1.9.10"
+    id("kotlin-parcelize")
 }
 
 kotlin {
@@ -35,6 +36,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
             api(libs.koin.core)
             implementation(libs.kermit)
+            implementation (libs.kotlin.stdlib)
 
             implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.kotlinx.datetime)
@@ -45,7 +47,6 @@ kotlin {
         androidMain.dependencies {
             api(libs.koin.android)
             implementation(libs.ktor.client.android)
-
             api(libs.androidx.datastore.preferences)
 
         }

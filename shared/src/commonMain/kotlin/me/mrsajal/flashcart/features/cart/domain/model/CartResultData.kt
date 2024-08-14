@@ -11,6 +11,7 @@ data class CartApiResponseData(
     val message:String,
     val cart: RemoteCartEntity?=null
 )
+
 data class CartListData(
     val product:RemoteProductEntity,
     val qty:Int

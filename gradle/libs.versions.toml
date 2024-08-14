@@ -5,6 +5,7 @@ coilCompose = "2.4.0"
 coreSplashscreen = "1.0.1"
 coroutinesVersion = "1.6.4"
 datastoreVersion = "1.1.1"
+gson = "2.10.1"
 jetpack_compose_country_code_picker_emoji = "2.2.7"
 kermit = "1.0.0"
 koinAndroidxCompose = "3.5.0"
@@ -32,12 +33,14 @@ androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-p
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jetpack_compose_country_code_picker_emoji = { module = "com.github.jump-sdk:jetpack_compose_country_code_picker_emoji", version.ref = "jetpack_compose_country_code_picker_emoji" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinVersion" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinVersion" }
 komposecountrycodepicker = { module = "io.github.joelkanyi:komposecountrycodepicker", version.ref = "komposecountrycodepicker" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }

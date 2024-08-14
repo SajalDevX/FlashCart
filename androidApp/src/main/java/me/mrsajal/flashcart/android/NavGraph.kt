@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.gson.Gson
 import me.mrsajal.flashcart.android.auth.login.LoginEmailScreen
 import me.mrsajal.flashcart.android.auth.login.LoginPasswordScreen
 import me.mrsajal.flashcart.android.auth.login.LoginViewModel
@@ -35,7 +36,10 @@ import me.mrsajal.flashcart.android.presentation.edit_profile.profile.EditProfil
 import me.mrsajal.flashcart.android.presentation.profile.ProfileDataScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.address.AddressMainScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.Cart
+import me.mrsajal.flashcart.android.presentation.users.customer.cart.CheckoutInfo
 import me.mrsajal.flashcart.android.presentation.users.customer.home.CustomerHome
+import me.mrsajal.flashcart.android.presentation.users.customer.place_order.CheckOut
+import me.mrsajal.flashcart.android.presentation.users.customer.place_order.CheckoutScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetail
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.Wishlist
 import org.koin.androidx.compose.koinViewModel
@@ -276,6 +280,14 @@ fun NavGraph(
                 }
                 composable(Routes.AddressMainScreen.route) {
                     AddressMainScreen(navController)
+                }
+                composable(
+                    Routes.CheckoutScreen.route + "?checkoutInfo={checkoutInfo}",
+                    arguments = listOf(navArgument("checkoutInfo") {
+                        type = NavType.StringType
+                        defaultValue = ""                    })
+                ) {
+                    CheckOut(navController)
                 }
             }
         }

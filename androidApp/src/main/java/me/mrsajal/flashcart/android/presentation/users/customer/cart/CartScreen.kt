@@ -1,6 +1,7 @@
 package me.mrsajal.flashcart.android.presentation.users.customer.cart
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -55,12 +57,13 @@ fun CartScreen(
     modifier: Modifier = Modifier,
     cartUiAction: (CartUiAction) -> Unit,
     cartUiState: CartScreenUiState,
-    navigateToProduct: (Int) -> Unit
+    navigateToProduct: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden
     )
+    val context = LocalContext.current
 
     if (cartUiState.isLoading) {
         Box(
@@ -149,7 +152,17 @@ fun CartScreen(
                                     Text("No items selected")
                                 }
                                 Button(
-                                    onClick = {},
+                                    onClick = {
+                                        if (cartUiState.selectedItems.isNotEmpty()) {
+                                            navigateToProduct()
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Select Items To Continue",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    },
                                     colors = ButtonDefaults.buttonColors(Color(0xffe6b225)),
                                     elevation = ButtonDefaults.elevation(0.dp),
                                     modifier = modifier
@@ -297,3 +310,4 @@ fun CartScreen(
         }
     }
 }
+
