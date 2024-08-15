@@ -25,5 +25,5 @@ val appModule = module {
     viewModel { ProfileViewModel(get()) }
     viewModel { EditProfileViewModel(get(),get()) }
     viewModel { AddressViewModel(get(),get()) }
-    viewModel { CheckOutViewModel(get(),get(),get()) }
+    viewModel { CheckOutViewModel(get(),get(),get(),get()) }
 }

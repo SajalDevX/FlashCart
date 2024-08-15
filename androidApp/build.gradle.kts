@@ -50,6 +50,7 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.gson)
+    implementation (libs.google.accompanist.pager)
 
     implementation(libs.koin.androidx.compose)
 

@@ -7,8 +7,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import me.mrsajal.flashcart.auth.data.AuthResponseData
-import me.mrsajal.flashcart.auth.domain.model.AuthResultData
 import me.mrsajal.flashcart.common.utils.Result
 import me.mrsajal.flashcart.features.cart.domain.model.CartListData
 import me.mrsajal.flashcart.features.cart.domain.usecases.*
@@ -16,7 +14,6 @@ import me.mrsajal.flashcart.features.profile.data.UserAddress
 import me.mrsajal.flashcart.features.profile.domain.usecases.GetProfileUseCase
 import me.mrsajal.flashcart.features.wishlist.domain.usecases.AddItemsToWishlistUseCase
 import kotlinx.parcelize.Parcelize
-import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
 
 
 class CartViewModel(
@@ -329,6 +326,11 @@ data class ParcelCartListData(
 
 internal fun UserAddress.toParcelAddressData(): ParcelAddressData {
     return ParcelAddressData(
+        fatherName, motherName, pin, mobileNumber, otherMobileNumber, city, road, state
+    )
+}
+internal fun ParcelAddressData.toUserAddress(): UserAddress {
+    return UserAddress(
         fatherName, motherName, pin, mobileNumber, otherMobileNumber, city, road, state
     )
 }

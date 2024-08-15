@@ -45,6 +45,8 @@ class AddressViewModel(
                         )
                     }
                 }
+
+                else -> {}
             }
         }
     }
@@ -69,6 +71,8 @@ class AddressViewModel(
                         )
                     }
                 }
+
+                else -> {}
             }
         }
     }

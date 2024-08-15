@@ -13,15 +13,19 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CheckoutInfo
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.ParcelCartListData
+import me.mrsajal.flashcart.android.presentation.users.customer.cart.toUserAddress
 import me.mrsajal.flashcart.common.utils.Result
 import me.mrsajal.flashcart.features.cart.domain.model.CartListData
 import me.mrsajal.flashcart.features.order.data.OrderItems
 import me.mrsajal.flashcart.features.order.domain.usecases.AddOrderUseCase
 import me.mrsajal.flashcart.features.products.domain.usecase.GetProductDetailsUseCase
+import me.mrsajal.flashcart.features.profile.data.UserAddress
+import me.mrsajal.flashcart.features.profile.domain.usecases.GetProfileUseCase
 
 class CheckOutViewModel(
     private val orderUseCase: AddOrderUseCase,
     private val getProductsUseCase: GetProductDetailsUseCase,
+    private val userProfileUseCase: GetProfileUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -34,6 +38,7 @@ class CheckOutViewModel(
             Log.e("CheckOutViewModel", checkoutInfo.toString())
             processCheckoutInfo(checkoutInfo)
         }
+        getAddressData()
     }
 
     private fun processCheckoutInfo(checkoutInfo: CheckoutInfo) {
@@ -42,7 +47,8 @@ class CheckOutViewModel(
                 productData = checkoutInfo.shippingOptions.map {
                     ParcelCartListData(it.productId, it.qty)
                 },
-                totalPrice = checkoutInfo.totalPrice
+                totalPrice = checkoutInfo.totalPrice,
+                selectedAddress = checkoutInfo.address.toUserAddress()
             )
         }
         getCheckoutItems()
@@ -90,13 +96,47 @@ class CheckOutViewModel(
                 is Result.Success -> {
                     _uiState.update { it.copy(isLoading = false, success = true) }
                 }
+
+                else -> {}
             }
         }
     }
 
+    private fun getAddressData() {
+        _uiState.update { it.copy(isAddressLoading = true) }
+        viewModelScope.launch {
+            delay(1000)
+            val result = runCatching { userProfileUseCase() }.getOrNull()
+            _uiState.update {
+                when (result) {
+                    is Result.Success -> {
+                        val addresses = result.data?.userDetails?.addresses ?: emptyList()
+                        val selectedAddress = addresses.firstOrNull()
+                        it.copy(
+                            address = addresses,
+                            selectedAddress = selectedAddress,
+                            isAddressLoading = false
+                        )
+                    }
+
+                    is Result.Error -> it.copy(
+                        error = result.message,
+                        isAddressLoading = false
+                    )
+
+                    else -> it.copy(isAddressLoading = false)
+                }
+            }
+        }
+    }
+    private fun selectAddress(address: UserAddress) {
+        _uiState.update { it.copy(selectedAddress = address) }
+    }
+
     fun handleAction(action: CheckOutUiAction) {
         when (action) {
-            CheckOutUiAction.PlaceOrder -> placeOrder()
+            is CheckOutUiAction.PlaceOrder -> placeOrder()
+            is CheckOutUiAction.SelectAddress -> selectAddress(action.address)
         }
     }
 }
@@ -110,9 +150,13 @@ fun ParcelCartListData.toOrderItems(): OrderItems {
 
 sealed class CheckOutUiAction {
     data object PlaceOrder : CheckOutUiAction()
+    data class SelectAddress(val address: UserAddress) : CheckOutUiAction()
 }
 
 data class CheckOutUiState(
+    val selectedAddress: UserAddress? = null,
+    val isAddressLoading: Boolean = false,
+    val address: List<UserAddress> = emptyList(),
     val items: List<CartListData> = emptyList(),
     val productData: List<ParcelCartListData>? = null,
     val totalPrice: Float = 0f,

@@ -16,11 +16,23 @@ fun ProfileDataScreen(navController: NavController) {
         onNaviToEditProfile = { navController.navigate(Routes.EditProfile.route) },
         onNavToAbout = {},
         onNavToOrders = {},
-        onNavToCart = {},
+        onNavToCart = {navController.navigate(Routes.Cart.route){
+            popUpTo(Routes.Cart.route) {
+                inclusive = true
+            }
+        } },
         onNavToHelp = {},
         onNavToReviews = {},
-        onNaviToAddress = { navController.navigate(Routes.AddressMainScreen.route) },
+        onNaviToAddress = { navController.navigate(Routes.AddressMainScreen.route){
+            popUpTo(Routes.AddressMainScreen.route) {
+                inclusive = true
+            }
+        } },
         onNavToSettings = {},
-        onNavToWishlist = {}
+        onNavToWishlist = {navController.navigate(Routes.Wishlist.route){
+            popUpTo(Routes.Wishlist.route) {
+                inclusive = true
+            }
+        } }
     )
 }
