@@ -43,11 +43,15 @@ class CheckOutViewModel(
 
     private fun processCheckoutInfo(checkoutInfo: CheckoutInfo) {
         viewModelScope.launch {
+            val totalPrice = checkoutInfo.totalPrice
+            val deliveryCharge = 5f
             _uiState.value = _uiState.value.copy(
                 productData = checkoutInfo.shippingOptions.map {
                     ParcelCartListData(it.productId, it.qty)
                 },
-                totalPrice = checkoutInfo.totalPrice,
+                totalPrice = totalPrice,
+                finalAmount = totalPrice - (totalPrice / 10) + deliveryCharge ,
+                discount = totalPrice-totalPrice/10,
                 selectedAddress = checkoutInfo.address.toUserAddress()
             )
         }
@@ -85,7 +89,7 @@ class CheckOutViewModel(
                 quantity = 1,
                 subTotal = _uiState.value.totalPrice,
                 shippingCharge = _uiState.value.totalPrice / 10,
-                total = _uiState.value.totalPrice,
+                total = _uiState.value.finalAmount,
                 orderItems = orderItems
             )
             when (result) {
@@ -160,7 +164,10 @@ data class CheckOutUiState(
     val items: List<CartListData> = emptyList(),
     val productData: List<ParcelCartListData>? = null,
     val totalPrice: Float = 0f,
+    val finalAmount : Float = 0f,
+    val discount: Float = 0f,
     val isLoading: Boolean = false,
     val error: String? = null,
+    val deliveryCharge: Float = 5f,
     val success: Boolean = false
 )

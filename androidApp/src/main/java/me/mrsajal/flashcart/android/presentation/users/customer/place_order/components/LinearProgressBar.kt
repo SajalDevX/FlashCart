@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import me.mrsajal.flashcart.android.presentation.users.customer.place_order.progressbarWidth
 
 @Composable
@@ -83,8 +84,9 @@ fun ProgressStep(number: Int, label: String, isCompleted: Boolean, isActive: Boo
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = label,
-            color = if (isActive) Color.Blue else Color.Gray,
-            fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal
+            color = if (isActive) Color.Black else Color.Gray,
+            fontSize = if(isActive) 18.sp else 14.sp,
+            fontWeight = if (isActive) FontWeight.ExtraBold else FontWeight.Normal
         )
     }
 }

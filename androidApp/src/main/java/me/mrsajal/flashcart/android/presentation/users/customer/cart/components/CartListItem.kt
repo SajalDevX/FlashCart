@@ -27,7 +27,6 @@ import coil.compose.AsyncImage
 import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.common.util.formatWithCommas
 import me.mrsajal.flashcart.android.presentation.components.VerticalDivider
-import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartUiAction
 import me.mrsajal.flashcart.features.cart.domain.model.CartListData
 import me.mrsajal.flashcart.features.products.domain.model.RemoteProductEntity
 import java.time.LocalDate
@@ -40,12 +39,13 @@ fun CartListItem(
     modifier: Modifier = Modifier,
     item: CartListData,
     quantity: Int,
-    isSelected: Boolean,
-    onIncreaseQty: () -> Unit,
-    onDecreaseQty: () -> Unit,
-    onCheckedChange: (Boolean) -> Unit,
-    onRemoveClick: () -> Unit,
-    onWishlistClick: () -> Unit,
+    isSelected: Boolean = false,
+    onIncreaseQty: (() -> Unit)?=null,
+    onDecreaseQty: (() -> Unit)?=null,
+    onCheckedChange: ((Boolean) -> Unit)?=null,
+    onRemoveClick: (() -> Unit)?=null,
+    onWishlistClick: (() -> Unit)?=null,
+    isCheckOut: Boolean = false
 ) {
     val currentDate = LocalDate.now()
     val deliveryDate = currentDate.plusDays(2)
@@ -58,6 +58,7 @@ fun CartListItem(
             .background(Color.White)
             .padding(16.dp)
             .height(240.dp),
+        verticalArrangement = Arrangement.Center
     ) {
         Row(
             modifier = modifier.weight(5f),
@@ -68,7 +69,8 @@ fun CartListItem(
                 onCheckedChange = onCheckedChange,
                 onIncreaseQty = onIncreaseQty,
                 onDecreaseQty = onDecreaseQty,
-                quantity = quantity
+                quantity = quantity,
+                isCheckOut = isCheckOut
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(
@@ -125,7 +127,8 @@ fun CartListItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "$" + (item.product.discountPrice?.toInt()?.formatWithCommas() ?: ""),
+                        text = "$" + (item.product.discountPrice?.toInt()?.formatWithCommas()
+                            ?: ""),
                         fontSize = 18.sp,
                         fontWeight = FontWeight(600)
                     )
@@ -155,46 +158,50 @@ fun CartListItem(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = onRemoveClick,
-                modifier = modifier
-                    .border(1.dp, Color.Gray.copy(alpha = 0.2f))
-                    .weight(1f)
-            ) {
-                Row {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Remove",
-                        modifier = Modifier.size(24.dp),
-                        tint = Color.DarkGray.copy(alpha = 0.7f)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        "Remove",
-                        style = MaterialTheme.typography.body1,
-                        color = Color.Gray
-                    )
+            if (onRemoveClick != null) {
+                IconButton(
+                    onClick = onRemoveClick,
+                    modifier = modifier
+                        .border(1.dp, Color.Gray.copy(alpha = 0.2f))
+                        .weight(1f)
+                ) {
+                    Row {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "Remove",
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.DarkGray.copy(alpha = 0.7f)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            "Remove",
+                            style = MaterialTheme.typography.body1,
+                            color = Color.Gray
+                        )
+                    }
                 }
             }
-            IconButton(
-                onClick = onWishlistClick,
-                modifier = modifier
-                    .border(1.dp, Color.Gray.copy(alpha = 0.2f))
-                    .weight(1f)
-            ) {
-                Row {
-                    Icon(
-                        Icons.Default.AddCircle,
-                        contentDescription = "Add to Wishlist",
-                        modifier = Modifier.size(24.dp),
-                        tint = Color.DarkGray.copy(alpha = 0.7f)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        "Buy later",
-                        style = MaterialTheme.typography.body1,
-                        color = Color.Gray
-                    )
+            if (onWishlistClick != null) {
+                IconButton(
+                    onClick = onWishlistClick,
+                    modifier = modifier
+                        .border(1.dp, Color.Gray.copy(alpha = 0.2f))
+                        .weight(1f)
+                ) {
+                    Row {
+                        Icon(
+                            Icons.Default.AddCircle,
+                            contentDescription = "Add to Wishlist",
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.DarkGray.copy(alpha = 0.7f)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            "Buy later",
+                            style = MaterialTheme.typography.body1,
+                            color = Color.Gray
+                        )
+                    }
                 }
             }
         }
@@ -206,10 +213,11 @@ fun ProductImage(
     modifier: Modifier = Modifier,
     isChecked: Boolean,
     imageUrl: String,
-    onCheckedChange: (Boolean) -> Unit,
-    onDecreaseQty: () -> Unit,
-    onIncreaseQty: () -> Unit,
-    quantity: Int
+    onCheckedChange: ((Boolean) -> Unit)?=null,
+    onDecreaseQty: (() -> Unit)?=null,
+    onIncreaseQty: (() -> Unit)?=null,
+    quantity: Int,
+    isCheckOut: Boolean = false
 ) {
     Box(
         modifier = modifier
@@ -236,14 +244,16 @@ fun ProductImage(
                     modifier = Modifier
                         .fillMaxSize()
                 )
-                Checkbox(
-                    checked = isChecked,
-                    onCheckedChange = onCheckedChange,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(4.dp)
-                        .size(20.dp)
-                )
+                if(!isCheckOut){
+                    Checkbox(
+                        checked = isChecked,
+                        onCheckedChange = onCheckedChange,
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(4.dp)
+                            .size(20.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -257,28 +267,32 @@ fun ProductImage(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = onDecreaseQty,
-                    modifier = Modifier.size(12.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.minus),
-                        contentDescription = "Decrease",
-                        modifier = Modifier.size(24.dp)
-                    )
+                if (onDecreaseQty != null) {
+                    IconButton(
+                        onClick = onDecreaseQty,
+                        modifier = Modifier.size(12.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.minus),
+                            contentDescription = "Decrease",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
                 VerticalDivider()
                 Text(text = quantity.toString(), style = MaterialTheme.typography.body1)
                 VerticalDivider()
-                IconButton(
-                    onClick = onIncreaseQty,
-                    modifier = Modifier.size(16.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Increase",
-                        modifier = Modifier.size(24.dp)
-                    )
+                if (onIncreaseQty != null) {
+                    IconButton(
+                        onClick = onIncreaseQty,
+                        modifier = Modifier.size(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Increase",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
             }
         }

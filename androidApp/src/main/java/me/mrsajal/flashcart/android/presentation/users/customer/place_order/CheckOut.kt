@@ -1,5 +1,7 @@
 package me.mrsajal.flashcart.android.presentation.users.customer.place_order
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,7 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +34,7 @@ import org.koin.androidx.compose.koinViewModel
 val progressbarWidth = 480.dp
 val steps = listOf("Address", "Checkout", "Payment")
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CheckOut(
     navController: NavController
@@ -47,7 +50,7 @@ fun CheckOut(
                 title = { Text("Order Summary") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Outlined.ArrowBack, contentDescription = "Back")
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -81,12 +84,7 @@ fun CheckOut(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-//            LinearProgressIndicator(
-//                progress = pagerState.currentPage.toFloat() / 1,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp)
-//            )
+
             Box(
                 modifier = Modifier
                     .height(80.dp)
@@ -131,9 +129,7 @@ fun CheckOut(
                                 item {
                                     TextButton(
                                         onClick = {
-                                            scope.launch {
-                                                pagerState.animateScrollToPage(1)
-                                            }
+
                                         },
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -173,8 +169,20 @@ fun CheckOut(
                     1 -> {
                         CheckoutScreen(
                             uiState = uiState,
-                            onEvent = viewModel::handleAction
+                            onChangeAddress = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(0)
+                                }
+                            },
+                            onContinueClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(2)
+                                }
+                            }
                         )
+                    }
+                    2->{
+
                     }
                 }
             }

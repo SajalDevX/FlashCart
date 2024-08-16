@@ -1,7 +1,6 @@
 package me.mrsajal.flashcart.android.presentation.users.customer.cart
 
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext

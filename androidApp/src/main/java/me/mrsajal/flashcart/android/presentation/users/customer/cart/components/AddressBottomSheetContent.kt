@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import me.mrsajal.flashcart.features.profile.data.UserAddress
-
 @Composable
 fun AddressBottomSheetContent(
     modifier: Modifier = Modifier,
@@ -30,7 +29,7 @@ fun AddressBottomSheetContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(1.0f)
+            .fillMaxHeight() // Ensures the column takes up the available height
     ) {
         Box(
             modifier = modifier
@@ -63,7 +62,12 @@ fun AddressBottomSheetContent(
                 )
             }
         }
-        LazyColumn {
+        // Remove the aspectRatio constraint to allow LazyColumn to expand and scroll
+        LazyColumn(
+            modifier = modifier
+                .fillMaxWidth()
+                .weight(1.0f) // Takes up the remaining space
+        ) {
             items(addresses) { address ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

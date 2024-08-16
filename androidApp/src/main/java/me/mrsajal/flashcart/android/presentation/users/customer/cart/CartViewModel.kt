@@ -301,7 +301,7 @@ data class CartScreenUiState(
 
 @Parcelize
 data class CheckoutInfo(
-    val shippingOptions: List<ParcelCartListData>, // Use ParcelCartListData here
+    val shippingOptions: List<ParcelCartListData>,
     val address: ParcelAddressData,
     val totalPrice: Float,
 ) : Parcelable
