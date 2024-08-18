@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.presentation.profile.components
+package me.mrsajal.flashcart.android.presentation.users.customer.profile.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.presentation.profile
+package me.mrsajal.flashcart.android.presentation.users.customer.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

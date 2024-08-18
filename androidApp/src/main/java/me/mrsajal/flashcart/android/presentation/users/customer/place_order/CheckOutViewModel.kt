@@ -87,7 +87,7 @@ class CheckOutViewModel(
 
             val result = orderUseCase(
                 quantity = 1,
-                subTotal = _uiState.value.totalPrice,
+                subTotal = _uiState.value.finalAmount,
                 shippingCharge = _uiState.value.totalPrice / 10,
                 total = _uiState.value.finalAmount,
                 orderItems = orderItems

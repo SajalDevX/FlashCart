@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.presentation.profile
+package me.mrsajal.flashcart.android.presentation.users.customer.profile
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

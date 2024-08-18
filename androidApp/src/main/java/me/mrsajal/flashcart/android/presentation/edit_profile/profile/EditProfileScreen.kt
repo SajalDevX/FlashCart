@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import me.mrsajal.flashcart.android.R
-import me.mrsajal.flashcart.android.presentation.profile.components.ProfileTextField
+import me.mrsajal.flashcart.android.presentation.users.customer.profile.components.ProfileTextField
 import java.io.File
 import java.io.FileOutputStream
 

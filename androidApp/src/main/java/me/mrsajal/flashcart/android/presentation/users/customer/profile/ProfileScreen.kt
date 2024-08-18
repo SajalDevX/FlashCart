@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.presentation.profile
+package me.mrsajal.flashcart.android.presentation.users.customer.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -32,11 +32,12 @@ import me.mrsajal.flashcart.android.presentation.components.BottomAppBar
 import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen
 import me.mrsajal.flashcart.android.presentation.edit_profile.profile.EditProfileDataScreen
-import me.mrsajal.flashcart.android.presentation.profile.ProfileDataScreen
+import me.mrsajal.flashcart.android.presentation.users.customer.profile.ProfileDataScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.address.AddressMainScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.Cart
 import me.mrsajal.flashcart.android.presentation.users.customer.home.CustomerHome
 import me.mrsajal.flashcart.android.presentation.users.customer.place_order.CheckOut
+import me.mrsajal.flashcart.android.presentation.users.customer.place_order.OrderSuccessScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetail
 import me.mrsajal.flashcart.android.presentation.users.customer.wishlist.Wishlist
 import org.koin.androidx.compose.koinViewModel
@@ -60,7 +61,7 @@ fun NavGraph(
     val bottomNavigationItems = remember {
         listOf(
             BottomNavigationItem(icon = R.drawable.homeicon, text = "Home"),
-            BottomNavigationItem(icon = R.drawable.hearticon, text = "Wishlist"),
+            BottomNavigationItem(icon = R.drawable.papericon, text = "Explore"),
             BottomNavigationItem(icon = R.drawable.profileicon, text = "Profile"),
             BottomNavigationItem(icon = R.drawable.papericon, text = "Cart"),
         )
@@ -72,14 +73,13 @@ fun NavGraph(
     }
     selectedItem = when (backStackState?.destination?.route) {
         Routes.Home.route -> 0
-        Routes.Wishlist.route -> 1
-        Routes.Cart.route -> 3
+        Routes.Explore.route -> 1
         Routes.Profile.route -> 2
+        Routes.Cart.route -> 3
         else -> 0
     }
     val isBottomBarVisible = remember(key1 = backStackState) {
         backStackState?.destination?.route == Routes.Home.route ||
-                backStackState?.destination?.route == Routes.Wishlist.route ||
                 backStackState?.destination?.route == Routes.Cart.route ||
                 backStackState?.destination?.route == Routes.Profile.route
     }
@@ -282,9 +282,13 @@ fun NavGraph(
                     Routes.CheckoutScreen.route + "?checkoutInfo={checkoutInfo}",
                     arguments = listOf(navArgument("checkoutInfo") {
                         type = NavType.StringType
-                        defaultValue = ""                    })
+                        defaultValue = ""
+                    })
                 ) {
                     CheckOut(navController)
+                }
+                composable(Routes.OrderSuccessScreen.route) {
+                    OrderSuccessScreen(navController = navController)
                 }
             }
         }

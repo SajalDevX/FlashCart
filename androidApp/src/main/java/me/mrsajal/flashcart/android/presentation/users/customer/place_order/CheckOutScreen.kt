@@ -89,7 +89,7 @@ fun CheckoutScreen(
                                 .height(36.dp)
                                 .width(144.dp)
                         ) {
-                            Text("Place Order")
+                            Text("Continue")
                         }
                     }
                 }

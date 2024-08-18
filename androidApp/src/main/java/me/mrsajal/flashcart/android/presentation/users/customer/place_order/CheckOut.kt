@@ -104,7 +104,7 @@ fun CheckOut(
             Spacer(modifier = Modifier.height(8.dp))
 
             HorizontalPager(
-                count = 2,
+                count = 3,
                 state = pagerState,
                 modifier = Modifier
                     .weight(1f)
@@ -181,8 +181,14 @@ fun CheckOut(
                             }
                         )
                     }
-                    2->{
 
+                    2 -> {
+                        PaymentScreen(
+                            navController = navController,
+                            onPaymentSuccess = {
+                               viewModel.handleAction(CheckOutUiAction.PlaceOrder)
+                            }
+                        )
                     }
                 }
             }
