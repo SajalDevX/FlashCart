@@ -36,6 +36,7 @@ import me.mrsajal.flashcart.android.presentation.users.customer.profile.ProfileD
 import me.mrsajal.flashcart.android.presentation.users.customer.address.AddressMainScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.Cart
 import me.mrsajal.flashcart.android.presentation.users.customer.home.CustomerHome
+import me.mrsajal.flashcart.android.presentation.users.customer.item_search.Search
 import me.mrsajal.flashcart.android.presentation.users.customer.place_order.CheckOut
 import me.mrsajal.flashcart.android.presentation.users.customer.place_order.OrderSuccessScreen
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetail
@@ -289,6 +290,9 @@ fun NavGraph(
                 }
                 composable(Routes.OrderSuccessScreen.route) {
                     OrderSuccessScreen(navController = navController)
+                }
+                composable(Routes.ProductSearchScreen.route){
+                    Search(navController = navController)
                 }
             }
         }

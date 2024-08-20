@@ -50,16 +50,18 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.gson)
-    implementation (libs.google.accompanist.pager)
 
     implementation(libs.koin.androidx.compose)
 
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.accompanist.systemuicontroller.v0314beta)
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.jetpack.compose.country.code.picker.emoji)
 
     implementation(libs.coil.compose)
     implementation (libs.kotlin.stdlib)
+
+
 
 }

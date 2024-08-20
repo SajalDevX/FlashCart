@@ -7,6 +7,8 @@ import me.mrsajal.flashcart.android.presentation.edit_profile.profile.EditProfil
 import me.mrsajal.flashcart.android.presentation.users.customer.address.AddressViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.cart.CartViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.home.HomeScreenViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.item_search.SearchViewModel
+import me.mrsajal.flashcart.android.presentation.users.customer.orders.OrdersViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.place_order.CheckOutViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.product.ProductDetailViewModel
 import me.mrsajal.flashcart.android.presentation.users.customer.profile.ProfileViewModel
@@ -26,4 +28,6 @@ val appModule = module {
     viewModel { EditProfileViewModel(get(),get()) }
     viewModel { AddressViewModel(get(),get()) }
     viewModel { CheckOutViewModel(get(),get(),get(),get()) }
+    viewModel{OrdersViewModel(get(),get(),get(),get())}
+    viewModel{ SearchViewModel(get()) }
 }

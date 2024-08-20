@@ -5,7 +5,6 @@ import kotlinx.coroutines.withContext
 import me.mrsajal.flashcart.common.data.local.UserPreferences
 import me.mrsajal.flashcart.common.utils.DispatcherProvider
 import me.mrsajal.flashcart.common.utils.Result
-import me.mrsajal.flashcart.features.brands.data.BrandApiService
 import me.mrsajal.flashcart.features.order.data.OrderApiService
 import me.mrsajal.flashcart.features.order.data.OrderItems
 import me.mrsajal.flashcart.features.order.data.RemoteOrderEntity
@@ -74,7 +73,7 @@ internal class OrderRepositoryImpl(
                 when (apiResponse.code) {
                     HttpStatusCode.OK -> {
                         Result.Success(
-                            data = apiResponse.data?.orderData?.orders?: emptyList()
+                            data = apiResponse.data.orderData?.orders?: emptyList()
                         )
                     }
 

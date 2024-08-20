@@ -18,7 +18,7 @@ fun ProductDetail(
         uiState = productDetailUiState,
         onNavigateToCartScreen = { navController.navigate(Routes.Cart.route) },
         onBackButtonClick =  { navController.navigateUp() },
-        onNavigateToSearchScreen = {},
+        onNavigateToSearchScreen = {navController.navigate(Routes.ProductSearchScreen.route)},
         navController =navController,
     )
 

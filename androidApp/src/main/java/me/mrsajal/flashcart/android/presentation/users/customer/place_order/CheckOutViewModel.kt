@@ -73,7 +73,6 @@ class CheckOutViewModel(
             Log.e("CheckOutViewModel", "${_uiState.value.items}")
         }
     }
-
     private fun placeOrder() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
