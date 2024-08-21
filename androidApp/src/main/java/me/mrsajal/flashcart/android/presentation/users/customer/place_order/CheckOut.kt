@@ -2,10 +2,13 @@ package me.mrsajal.flashcart.android.presentation.users.customer.place_order
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -25,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import me.mrsajal.flashcart.android.presentation.users.customer.address.AddressCard
 import me.mrsajal.flashcart.android.presentation.users.customer.place_order.components.LinearProgressBar
@@ -34,6 +36,7 @@ import org.koin.androidx.compose.koinViewModel
 val progressbarWidth = 480.dp
 val steps = listOf("Address", "Checkout", "Payment")
 
+@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CheckOut(
@@ -41,7 +44,7 @@ fun CheckOut(
 ) {
     val viewModel: CheckOutViewModel = koinViewModel()
     val uiState = viewModel.uiState.collectAsState().value
-    val pagerState = rememberPagerState(initialPage = 1)
+    val pagerState = rememberPagerState(pageCount = { steps.size }, initialPage= 1)
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -104,7 +107,7 @@ fun CheckOut(
             Spacer(modifier = Modifier.height(8.dp))
 
             HorizontalPager(
-                count = 3,
+
                 state = pagerState,
                 modifier = Modifier
                     .weight(1f)

@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState.Loading)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -49,12 +49,12 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val isSystemInDarkMode = isSystemInDarkTheme()
                 val systemController = rememberSystemUiController()
-                SideEffect {
-                    systemController.setSystemBarsColor(
-                        color = Color.Transparent,
-                        darkIcons = !isSystemInDarkMode
-                    )
-                }
+//                SideEffect {
+//                    systemController.setSystemBarsColor(
+//                        color = Color.Transparent,
+//                        darkIcons = !isSystemInDarkMode
+//                    )
+//                }
                 Box(
                     modifier = Modifier.background(
                         color = MaterialTheme.colors.background
