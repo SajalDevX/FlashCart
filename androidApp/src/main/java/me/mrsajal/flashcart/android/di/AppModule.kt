@@ -30,4 +30,5 @@ val appModule = module {
     viewModel { CheckOutViewModel(get(),get(),get(),get()) }
     viewModel{OrdersViewModel(get(),get(),get(),get())}
     viewModel{ SearchViewModel(get()) }
+    viewModel{ OrdersViewModel(get(),get(),get(),get()) }
 }

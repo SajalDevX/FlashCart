@@ -109,6 +109,7 @@ fun LoginPasswordScreen(
                     value = uiState.password,
                     onValueChange = onPasswordChange,
                     hint = R.string.password_hint,
+                    label = R.string.password_hint,
                     isSingleLine = true,
                     isPasswordTextField = true,
                     isValid = if(uiState.errorMessage==null) true else false,

@@ -15,7 +15,7 @@ fun ProfileDataScreen(navController: NavController) {
         onLogout = {},
         onNaviToEditProfile = { navController.navigate(Routes.EditProfile.route) },
         onNavToAbout = {},
-        onNavToOrders = {},
+        onNavToOrders = {navController.navigate(Routes.OrderListScreen.route)},
         onNavToCart = {navController.navigate(Routes.Cart.route){
             popUpTo(Routes.Cart.route) {
                 inclusive = true

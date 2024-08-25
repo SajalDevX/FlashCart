@@ -1,5 +1,7 @@
 package me.mrsajal.flashcart.features.order.domain.repository
 
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.Severity
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.withContext
 import me.mrsajal.flashcart.common.data.local.UserPreferences
@@ -70,10 +72,16 @@ internal class OrderRepositoryImpl(
                     offset = offset,
                     limit = limit
                 )
+                Logger.log(
+                    Severity.Error,
+                    "GetOrderRepo",
+                    message = "${apiResponse.data} "+ userData.token,
+                    throwable = null
+                )
                 when (apiResponse.code) {
                     HttpStatusCode.OK -> {
                         Result.Success(
-                            data = apiResponse.data.orderData?.orders?: emptyList()
+                            data = apiResponse.data.data?.orders?: emptyList()
                         )
                     }
 

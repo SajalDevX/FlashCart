@@ -2,6 +2,8 @@ package me.mrsajal.flashcart.android.common.util.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,6 +42,9 @@ fun CustomTextField(
     label: Int? = null,
     isValid: Boolean,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     val themeColor = if (isSystemInDarkTheme()) {
@@ -59,7 +64,6 @@ fun CustomTextField(
         onValueChange = onValueChange,
         modifier = modifier
             .fillMaxWidth()
-            .border(2.dp, borderColor, shape = RoundedCornerShape(12.dp))
             .padding(1.dp),
         textStyle = MaterialTheme.typography.body2,
         keyboardOptions = KeyboardOptions.Default.copy(
@@ -70,7 +74,9 @@ fun CustomTextField(
         colors = TextFieldDefaults.outlinedTextFieldColors(
             backgroundColor = themeColor,
             focusedBorderColor = borderColor,
-            unfocusedBorderColor = borderColor
+            unfocusedBorderColor = borderColor,
+            errorBorderColor = Red,
+            placeholderColor = Color.Gray
         ),
         trailingIcon = if (isPasswordTextField) {
             {
@@ -93,17 +99,25 @@ fun CustomTextField(
         isError = !isValid,
         label = {
             if (label != null) {
-                Text(text = stringResource(id = label), style = MaterialTheme.typography.body2)
+                Text(
+                    text = stringResource(id = label),
+                    style = MaterialTheme.typography.body2
+                )
             }
         },
+        interactionSource = interactionSource,
         placeholder = {
-            if (hint != null) {
-                Text(text = stringResource(id = hint), style = MaterialTheme.typography.body2)
+            if (hint != null && value.isEmpty() && !isFocused) {
+                Text(
+                    text = stringResource(id = hint),
+                    style = MaterialTheme.typography.body2
+                )
             }
         },
         shape = RoundedCornerShape(12.dp)
     )
 }
+
 
 @Composable
 fun PasswordEyeIcon(

@@ -20,6 +20,7 @@ sealed class Routes (val route: String){
     data object CheckoutScreen : Routes("CheckoutScreen")
     data object OrderSuccessScreen : Routes("OrderSuccessScreen")
     data object ProductSearchScreen : Routes("ProductSearchScreen")
+    data object OrderListScreen : Routes("OrderListScreen")
 
 
     data object AdminHome : Routes("AdminHome")

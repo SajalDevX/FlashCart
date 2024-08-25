@@ -25,7 +25,7 @@ data class OrderData(
 data class OrderResponseData(
     val success: Boolean,
     val message: String,
-    val orderData: OrderData? = null
+    val data: OrderData? = null
 )
 data class OrderApiResponse(
     val code: HttpStatusCode,

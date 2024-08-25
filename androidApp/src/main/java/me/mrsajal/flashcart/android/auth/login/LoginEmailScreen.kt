@@ -103,6 +103,7 @@ fun LoginEmailScreen(
                 CustomTextField(
                     value = uiState.email,
                     onValueChange = onEmailChange,
+                    label = R.string.email_hint,
                     hint = R.string.email_hint,
                     isSingleLine = true,
                     isValid = if(uiState.errorMessage==null) true else false,

@@ -1,5 +1,7 @@
 package me.mrsajal.flashcart.features.order.data
 
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.Severity
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -30,20 +32,35 @@ internal class OrderApiService : KtorApi() {
 
     suspend fun getOrders(
         userToken: String,
-        offset:Int,
-        limit:Int
+        offset: Int,
+        limit: Int
     ): OrderApiResponse {
         val httpResponse = client.get {
             endPoint("order")
-            parameter("offset",offset)
-            parameter("limit",limit)
+//            parameter("offset", offset)
+//            parameter("limit", limit)
             setToken(userToken)
         }
+
+        Logger.log(
+            Severity.Error,
+            "GetOrderApiService",
+            message = "Response status: ${httpResponse.status}",
+            throwable = null
+        )
+        Logger.log(
+            Severity.Error,
+            "GetOrderApiService",
+            message = "Response body: ${httpResponse.body<String>()}",
+            throwable = null
+        )
+
         return OrderApiResponse(
             code = httpResponse.status,
             data = httpResponse.body()
         )
     }
+
 
     suspend fun orderPayment(
         orderId: String,
