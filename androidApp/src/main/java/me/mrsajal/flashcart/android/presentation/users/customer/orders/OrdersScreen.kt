@@ -67,7 +67,7 @@ fun OrderCard(order: OrderWithProductDetails) {
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Order ID: ${order.orderId}", style = MaterialTheme.typography.h6)
+            Text(text = "Order ID: ${order.orderId}", style = MaterialTheme.typography.subtitle1)
             Text(text = "Status: ${order.orderStatus}", style = MaterialTheme.typography.body1)
 
             Spacer(modifier = Modifier.height(8.dp))

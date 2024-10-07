@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import me.mrsajal.flashcart.android.common.util.routes.Routes
+import me.mrsajal.flashcart.android.navgraph.routes.Routes
 import me.mrsajal.flashcart.android.presentation.components.ProductHomeIcon
 
 

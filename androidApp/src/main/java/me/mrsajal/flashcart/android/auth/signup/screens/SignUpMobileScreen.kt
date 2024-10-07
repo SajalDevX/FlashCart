@@ -39,7 +39,7 @@ import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.auth.common.CustomButton
 import me.mrsajal.flashcart.android.auth.signup.SignUpUiState
 import me.mrsajal.flashcart.android.common.theming.AppTheme
-import me.mrsajal.flashcart.android.common.util.routes.Routes
+import me.mrsajal.flashcart.android.navgraph.routes.Routes
 
 @Composable
 fun MobileScreen(

@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import me.mrsajal.flashcart.android.common.util.routes.Routes
+import me.mrsajal.flashcart.android.navgraph.routes.Routes
 
 @Composable
 fun PaymentScreen(

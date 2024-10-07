@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android
+package me.mrsajal.flashcart.android.navgraph
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -19,6 +19,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import me.mrsajal.flashcart.android.MainActivityUiState
+import me.mrsajal.flashcart.android.R
 import me.mrsajal.flashcart.android.auth.login.LoginEmailScreen
 import me.mrsajal.flashcart.android.auth.login.LoginPasswordScreen
 import me.mrsajal.flashcart.android.auth.login.LoginViewModel
@@ -27,7 +29,7 @@ import me.mrsajal.flashcart.android.auth.signup.screens.EmailScreen
 import me.mrsajal.flashcart.android.auth.signup.screens.MobileScreen
 import me.mrsajal.flashcart.android.auth.signup.screens.PasswordScreen
 import me.mrsajal.flashcart.android.auth.signup.screens.UserDetailScreen
-import me.mrsajal.flashcart.android.common.util.routes.Routes
+import me.mrsajal.flashcart.android.navgraph.routes.Routes
 import me.mrsajal.flashcart.android.presentation.components.BottomAppBar
 import me.mrsajal.flashcart.android.presentation.components.BottomNavigationItem
 import me.mrsajal.flashcart.android.presentation.onboarding.OnBoardingScreen

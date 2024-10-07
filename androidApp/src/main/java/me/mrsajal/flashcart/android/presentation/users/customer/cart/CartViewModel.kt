@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.presentation.users.customer.cart
+ package me.mrsajal.flashcart.android.presentation.users.customer.cart
 
 import android.os.Parcelable
 import android.util.Log

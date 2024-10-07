@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import me.mrsajal.flashcart.android.presentation.components.ProductHomeIcon
 import me.mrsajal.flashcart.android.presentation.users.customer.item_search.components.SearchBar
-import me.mrsajal.flashcart.android.common.util.routes.Routes
+import me.mrsajal.flashcart.android.navgraph.routes.Routes
 
 @Composable
 fun SearchScreen(

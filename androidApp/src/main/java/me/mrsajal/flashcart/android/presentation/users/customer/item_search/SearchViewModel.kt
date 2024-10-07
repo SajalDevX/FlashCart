@@ -43,7 +43,6 @@ class SearchViewModel(
                     }
                 }
             } catch (e: Exception) {
-                // Handle any errors and update UI state
                 _uiState.value = _uiState.value.copy(
                     error = e.message,
                     isLoading = false
@@ -80,3 +79,6 @@ data class SearchUiState(
     val isLoading: Boolean = false,
     val searchResults: List<RemoteProductEntity> = emptyList()
 )
+
+
+

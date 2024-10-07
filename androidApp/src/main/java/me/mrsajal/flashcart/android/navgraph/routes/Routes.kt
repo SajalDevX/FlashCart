@@ -1,4 +1,4 @@
-package me.mrsajal.flashcart.android.common.util.routes
+package me.mrsajal.flashcart.android.navgraph.routes
 
 sealed class Routes (val route: String){
     data object Onboarding: Routes("Onboarding")
